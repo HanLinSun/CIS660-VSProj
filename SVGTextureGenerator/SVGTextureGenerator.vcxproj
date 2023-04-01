@@ -145,14 +145,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cluster.cpp" />
-    <ClCompile Include="imade_data.cpp" />
+    <ClCompile Include="image_data.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sampleMethod.cpp" />
     <ClCompile Include="SVGContext.cpp" />
     <ClCompile Include="SVGTextureGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cluster.h" />
     <ClInclude Include="image_data.h" />
+    <ClInclude Include="sampleMethod.h" />
     <ClInclude Include="SVGContext.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

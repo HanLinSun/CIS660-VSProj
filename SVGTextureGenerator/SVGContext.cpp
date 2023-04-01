@@ -1,6 +1,6 @@
 #define NANOSVG_IMPLEMENTATION
 #include "SVGContext.h"
-#include <string.h>
+#include <string>
 #include <fstream>
 
 SVGContext::SVGContext() {}

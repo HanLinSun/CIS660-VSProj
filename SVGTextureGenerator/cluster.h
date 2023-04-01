@@ -11,7 +11,6 @@
 
 using namespace glm;
 
-
 struct sample {
     int index = 0;
     vec2 position = vec2(0);
@@ -33,7 +32,6 @@ private:
 public:
     cluster();
     std::vector<vec2> sample_list;
-
     void sample_cluster();
     void set_id(int);
     int get_id();

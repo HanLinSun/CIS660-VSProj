@@ -3,11 +3,11 @@
 #include <cmath>
 #include <random>
 
+
 image_data::image_data()
 {
 
 }
-
 void image_data::calculate_neighbor(int option) {
     if (option == 1) {
         for (auto& [key1, sample] : this->sample_data) {
@@ -165,4 +165,3 @@ void image_data::init_output_image()
     this->calculate_neighbor(1);
 
 }
-
