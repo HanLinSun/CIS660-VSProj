@@ -21,10 +21,13 @@
     <ClCompile Include="SVGContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="imade_data.cpp">
+    <ClCompile Include="image_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sampleMethod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cluster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sampleMethod.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
