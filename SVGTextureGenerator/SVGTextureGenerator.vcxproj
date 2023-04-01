@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cluster.cpp" />
     <ClCompile Include="imade_data.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SVGContext.cpp" />

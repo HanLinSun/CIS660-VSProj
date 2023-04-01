@@ -35,5 +35,8 @@ public:
     std::vector<vec2> sample_list;
 
     void sample_cluster();
+    void set_id(int);
+    int get_id();
+
 };
 

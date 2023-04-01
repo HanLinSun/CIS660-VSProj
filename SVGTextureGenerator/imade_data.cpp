@@ -1,20 +1,35 @@
 #include "image_data.h"
 #include <glm/detail/func_geometric.hpp>
 #include <cmath>
+#include <random>
 
 image_data::image_data()
 {
 
 }
 
-void image_data::calculate_neighbor() {
-
-    for (auto& [key1, sample] : this->sample_data) {
-        for (auto& [key2, target] : this->sample_data) {
-            float phy_distance = glm::distance(sample->position, target->position);
-            if (phy_distance < this->neighbor_r) {
-                sample->neighborhood[target->index] = phy_distance;
-                //B->neighborhood[A->index]=distance;
+void image_data::calculate_neighbor(int option) {
+    if (option == 1) {
+        for (auto& [key1, sample] : this->sample_data) {
+            for (auto& [key2, target] : this->sample_data) {
+                float phy_distance = glm::distance(sample->position, target->position);
+                if (phy_distance < this->neighbor_r) {
+                    sample->neighborhood[target->index] = phy_distance;
+                    //B->neighborhood[A->index]=distance;
+                }
+            }
+        }
+    
+    
+    }
+    else if (option == 0) {
+        for (auto& [key1, sample] : this->output_sample_data) {
+            for (auto& [key2, target] : this->output_sample_data) {
+                float phy_distance = glm::distance(sample->position, target->position);
+                if (phy_distance < this->neighbor_r) {
+                    sample->neighborhood[target->index] = phy_distance;
+                    //B->neighborhood[A->index]=distance;
+                }
             }
         }
     }
@@ -91,5 +106,63 @@ std::vector<int> image_data::histogram_distribution(vec2 input, cluster* m_clust
     }
 
     return output;
+}
+
+float m_ramdom(int low, int high) {
+    return low + rand()%(high - low + 1);
+
+}
+
+//initialize the output image
+void image_data::init_output_image()
+{
+    //assign random patch;
+    //low + rand() % (high - low + 1)
+    vec2 curr_pos = vec2(m_ramdom(6, 294), m_ramdom(6, 294));
+    vec2 new_pos = vec2(m_ramdom(6, 294), m_ramdom(6, 294));
+
+    float length = this->patch_size / 2;
+
+    vec2 distance_vect = new_pos - curr_pos;
+    int key = 0;
+
+    //first step : assign ramdom position to selected pitch
+    for (auto& [key1, m_sample] : this->sample_data) {
+
+        vec2 distance_from_center = m_sample->position - curr_pos;
+        if (-length < distance_from_center.x < length && -length < distance_from_center.y < length) {
+            std::unique_ptr<sample> new_sample = std::make_unique<sample>();
+            new_sample->position = new_pos + distance_from_center;
+            this->output_sample_data[key] = std::move(new_sample);
+            key += 1;
+        }
+    }
+
+    std::unordered_map<int, int> cluster_compare;
+    int cluster_index = 0;
+
+    //second step: generat new output cluster/ sample dict's information
+    for (auto& [key, m_sample] : this->output_sample_data) {
+        if (cluster_compare.find(m_sample->cluster_ID) == cluster_compare.end()) {
+            cluster_compare[m_sample->cluster_ID] = cluster_index;
+            
+
+            std::unique_ptr<cluster> new_cluster= std::make_unique<cluster>();
+            new_cluster->sample_list.push_back(m_sample->position);
+            new_cluster->set_id(cluster_index);
+            this->output_cluster[cluster_index] = std::move(new_cluster);
+            m_sample->cluster_ID = cluster_index;
+            cluster_index += 1;
+        }
+        else {
+            this->output_cluster[cluster_compare[m_sample->cluster_ID]]->sample_list.push_back(m_sample->position);
+            m_sample->cluster_ID = cluster_index;
+        }
+
+
+    
+    }
+    this->calculate_neighbor(1);
+
 }
 
