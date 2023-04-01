@@ -3,6 +3,7 @@
 #include <random>
 
 SampleMethod::SampleMethod() {}
+SampleMethod::~SampleMethod() {}
 
 void SampleMethod::insertSamplePoint(glm::vec2 point, vector<vector<glm::vec2>>& grids,float cellSize)
 {
@@ -51,7 +52,7 @@ vector<glm::vec2> SampleMethod::poissionDiskSampling(float radius, float k, int 
 	vector<glm::vec2> activePoints;
 
 	//The sample cell size
-	float cellSize = floor(radius / sqrt(N));
+	float cellSize =radius / sqrt(N);
 
 	// Here need to know pattern width and height
 	// figure number of cells within a given canvas
@@ -117,7 +118,7 @@ vector<glm::vec2> SampleMethod::poissionDiskSampling(float radius, float k, int 
 
 			glm::vec2 newPoint = glm::vec2(p_newx, p_newy);
 
-			if (!isValidPoint())
+			if (!isValidPoint(grids,cellSize,canvas_width,canvas_height,newPoint,radius))
 			{
 				continue;
 			}

@@ -14,8 +14,12 @@ public:
     SampleMethod();
     ~SampleMethod();
 
-    static SampleMethod& getInstance()
+    static SampleMethod* getInstance()
     {
+        if (instance == NULL)
+        {
+           instance = new SampleMethod();
+        }
         return instance;
     }
 
@@ -38,7 +42,7 @@ public:
    vector<glm::vec2> hierarchicalSampling();
 
 private:
-    static SampleMethod instance;
+  inline static SampleMethod* instance=NULL;
 };
 
 #endif
