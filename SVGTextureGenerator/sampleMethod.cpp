@@ -12,7 +12,7 @@ void SampleMethod::insertSamplePoint(glm::vec2 point, vector<vector<glm::vec2>>&
 	grids[xIndex][yIndex] = point;
 }
 
-bool isValidPoint(vector<vector<glm::vec2>> grids, float cellSize,int canvas_width,int canvas_height, glm::vec2 point, float radius)
+bool SampleMethod::isValidPoint(vector<vector<glm::vec2>>& grids, float cellSize,int canvas_width,int canvas_height, glm::vec2 point, float radius)
 {
 	if (point.x < 0 || point.x >= canvas_width || point.y < 0 || point.y >= canvas_height)
 	{

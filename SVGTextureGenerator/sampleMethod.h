@@ -21,7 +21,7 @@ public:
 
     SampleMethod& operator=(const  SampleMethod&);
 
-    bool isValidPoint(vector<glm::vec2> grids, float cellSize, int canvas_width, int canvas_height, glm::vec2 point, float radius);
+    bool isValidPoint(vector<vector<glm::vec2>>& grids, float cellSize, int canvas_width, int canvas_height, glm::vec2 point, float radius);
 
     /// <summary>
     /// This method is used to sample the whole canvas
