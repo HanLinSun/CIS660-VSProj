@@ -1,4 +1,0 @@
-﻿  main.cpp
-D:\CIS660\CIS660-vsproj\SVGReader\SVGTextureGenerator\main.cpp(19,78): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\CIS660\CIS660-vsproj\SVGReader\SVGTextureGenerator\main.cpp(19,71): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  SVGTextureGenerator.vcxproj -> D:\CIS660\CIS660-vsproj\SVGReader\Debug\SVGTextureGenerator.exe
