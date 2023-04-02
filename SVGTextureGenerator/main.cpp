@@ -53,7 +53,8 @@ vector<vector<glm::vec2>> sampleShape(NSVGshape* shape)
 		int width = rightCorner.x - leftCorner.x;
 		int height = rightCorner.y - leftCorner.y;
 
-		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 6, width, height);
+		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 6, width, height,leftCorner);
+
 		shapeSamplePoints.push_back(samplePoints);
 		shape =shape->next;
 	}
@@ -74,7 +75,7 @@ vector<vector<glm::vec2>> samplePath(NSVGpath* path)
 		int width = rightCorner.x - leftCorner.x;
 		int height = rightCorner.y - leftCorner.y;
 
-		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height);
+		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height,leftCorner);
 		pathSamplePoints.push_back(samplePoints);
 		path = path->next;
 	}
@@ -116,7 +117,7 @@ void testFunction()
 			int width = rightCorner.x - leftCorner.x;
 			int height = rightCorner.y - leftCorner.y;
 
-			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height);
+			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height, leftCorner);
 
 			std::unique_ptr<cluster> new_cluster = std::make_unique<cluster>();
 
@@ -144,23 +145,23 @@ void testFunction()
 		}
 	}
 
-	if (imgPath->next != nullptr)
-	{
-		while (imgPath && imgPath->next != nullptr)
-		{
+	//if (imgPath->next != nullptr)
+	//{
+	//	while (imgPath && imgPath->next != nullptr)
+	//	{
 
-			//This svg is about shapes
-			glm::vec2 leftCorner = glm::vec2(imgPath->bounds[0], imgPath->bounds[1]);
-			glm::vec2 rightCorner = glm::vec2(imgPath->bounds[2], imgPath->bounds[3]);
+	//		//This svg is about shapes
+	//		glm::vec2 leftCorner = glm::vec2(imgPath->bounds[0], imgPath->bounds[1]);
+	//		glm::vec2 rightCorner = glm::vec2(imgPath->bounds[2], imgPath->bounds[3]);
 
-			int width = rightCorner.x - leftCorner.x;
-			int height = rightCorner.y - leftCorner.y;
+	//		int width = rightCorner.x - leftCorner.x;
+	//		int height = rightCorner.y - leftCorner.y;
 
-			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height);
-			pathPoints.push_back(samplePoints);
-			imgPath = imgPath->next;
-		}
-	}
+	//		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height);
+	//		pathPoints.push_back(samplePoints);
+	//		imgPath = imgPath->next;
+	//	}
+	//}
 
 	overall_image.calculate_neighbor(0);
 	overall_image.init_output_image();
