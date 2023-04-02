@@ -19,4 +19,25 @@ D:\CIS660\CIS660-VSProj\SVGTextureGenerator\main.cpp(75,14): warning C4244: 'ini
           [
               T=float
           ]
+D:\CIS660\CIS660-VSProj\SVGTextureGenerator\main.cpp(113,14): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\CIS660\CIS660-VSProj\SVGTextureGenerator\main.cpp(114,15): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\CIS660\CIS660-VSProj\SVGTextureGenerator\main.cpp(131,14): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\CIS660\CIS660-VSProj\SVGTextureGenerator\main.cpp(132,15): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+  LINK : D:\CIS660\CIS660-VSProj\x64\Debug\SVGTextureGenerator.exe not found or not built by the last incremental link; performing full link
   SVGTextureGenerator.vcxproj -> D:\CIS660\CIS660-VSProj\x64\Debug\SVGTextureGenerator.exe

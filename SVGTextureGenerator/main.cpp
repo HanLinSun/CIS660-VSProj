@@ -84,9 +84,9 @@ vector<vector<glm::vec2>> samplePath(NSVGpath* path)
 void testFunction()
 {
 	SVGContext context;
-	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
+	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\pattern.svg";
-	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testPic.svg";
+	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testPic.svg";
     context.loadSVGFromFile(loadFilePath.c_str(),10);
 	NSVGimage* readImg = context.getSVGImage();
 
