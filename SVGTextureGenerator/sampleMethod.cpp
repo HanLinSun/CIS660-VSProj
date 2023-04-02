@@ -10,7 +10,7 @@ void SampleMethod::insertSamplePoint(glm::vec2 point, vector<vector<glm::vec2>>&
 	int xIndex = floor(point.x / cellSize);
 	int yIndex = floor(point.y / cellSize);
 	//put this point into corresponding grid
-	grids[xIndex][yIndex] = point;
+	grids[yIndex][xIndex] = point;
 }
 
 bool SampleMethod::isValidPoint(vector<vector<glm::vec2>>& grids, float cellSize,int canvas_width,int canvas_height, glm::vec2 point, float radius)
@@ -22,18 +22,20 @@ bool SampleMethod::isValidPoint(vector<vector<glm::vec2>>& grids, float cellSize
 	//check neighbour cells
 	int xindex = floor(point.x / cellSize);
 	int yindex = floor(point.y / cellSize);
+
 	int i0 = max(xindex - 1, 0);
 	int i1 = min(xindex + 1, canvas_width - 1);
+
 	int j0 = max(yindex - 1, 0);
 	int j1 = min(yindex + 1, canvas_height - 1);
 
-	for (int i = i0; i <= i1; i++)
+	for (int j = j0; j <= j1; j++)
 	{
-		for (int j = j0; j <= j1; j++)
+		for (int i = i0; i <= i1; i++)
 		{
-			if (grids[i][j] != glm::vec2(0.f, 0.f))
+			if (grids[j][i] != glm::vec2(0.f, 0.f))
 			{		
-				if (glm::distance(grids[i][j], point) < radius)
+				if (glm::distance(grids[j][i], point) < radius)
 				{
 					return false;
 				}
@@ -62,7 +64,7 @@ vector<glm::vec2> SampleMethod::poissionDiskSampling(float radius, float k, int 
 
 	//grid are identified with (x,y) int
 	// each grid contain a vector pushing point inside
-	vector<vector<glm::vec2>> grids(ncells_height, vector<glm::vec2>(ncells_width));
+	vector<vector<glm::vec2>> grids(ncells_height);
 
 	//Allocate the grid and initialize all elements to null
 	for (int i = 0; i < ncells_height; i++)

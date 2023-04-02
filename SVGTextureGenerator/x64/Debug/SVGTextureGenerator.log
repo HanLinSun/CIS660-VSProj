@@ -1,0 +1,22 @@
+﻿  main.cpp
+D:\CIS660\CIS660-VSProj\SVGTextureGenerator\main.cpp(53,13): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\CIS660\CIS660-VSProj\SVGTextureGenerator\main.cpp(54,14): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\CIS660\CIS660-VSProj\SVGTextureGenerator\main.cpp(74,13): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\CIS660\CIS660-VSProj\SVGTextureGenerator\main.cpp(75,14): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+  SVGTextureGenerator.vcxproj -> D:\CIS660\CIS660-VSProj\x64\Debug\SVGTextureGenerator.exe
