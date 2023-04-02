@@ -2,6 +2,7 @@
 #include <glm/detail/func_geometric.hpp>
 #include <cmath>
 #include <random>
+#include <iostream>
 
 
 image_data::image_data()
@@ -118,31 +119,44 @@ void image_data::init_output_image()
 {
     //assign random patch;
     //low + rand() % (high - low + 1)
-    vec2 curr_pos = vec2(m_ramdom(6, 294), m_ramdom(6, 294));
-    vec2 new_pos = vec2(m_ramdom(6, 294), m_ramdom(6, 294));
 
-    float length = this->patch_size / 2;
+    int counter = 0;
 
-    vec2 distance_vect = new_pos - curr_pos;
     int key = 0;
+    while (counter < 300) {
+        vec2 curr_pos = vec2(m_ramdom(3, this->input_hight - this->neighbor_r), m_ramdom(3, this->input_width - this->neighbor_r));
+        vec2 new_pos = vec2(m_ramdom(3, this->desired_hight - this->neighbor_r), m_ramdom(3, this->desired_width - this->neighbor_r));
 
-    //first step : assign ramdom position to selected pitch
-    for (auto& [key1, m_sample] : this->sample_data) {
+        float length = this->patch_size / 2;
 
-        vec2 distance_from_center = m_sample->position - curr_pos;
-        if (-length < distance_from_center.x < length && -length < distance_from_center.y < length) {
-            std::unique_ptr<sample> new_sample = std::make_unique<sample>();
-            new_sample->position = new_pos + distance_from_center;
-            this->output_sample_data[key] = std::move(new_sample);
-            key += 1;
+        vec2 distance_vect = new_pos - curr_pos;
+        
+        //first step : assign ramdom position to selected pitch
+        for (auto& [key1, m_sample] : this->sample_data) {
+
+            vec2 distance_from_center = m_sample->position - curr_pos;
+            if (-length < distance_from_center.x && distance_from_center.x < length && -length < distance_from_center.y && distance_from_center.y < length) {
+
+                std::unique_ptr<sample> new_sample = std::make_unique<sample>();
+                new_sample->position = new_pos + distance_from_center;
+                std::cout << "x: " << distance_from_center.x << "y: " << distance_from_center.y << std::endl;
+                new_sample->cluster_ID = m_sample->cluster_ID;
+   
+                this->output_sample_data[key] = std::move(new_sample);
+                key += 1;
+            }
         }
+        counter += 1;
+    
     }
+    
 
     std::unordered_map<int, int> cluster_compare;
     int cluster_index = 0;
 
     //second step: generat new output cluster/ sample dict's information
     for (auto& [key, m_sample] : this->output_sample_data) {
+        //std::cout << m_sample->cluster_ID << std::endl;
         if (cluster_compare.find(m_sample->cluster_ID) == cluster_compare.end()) {
             cluster_compare[m_sample->cluster_ID] = cluster_index;
             

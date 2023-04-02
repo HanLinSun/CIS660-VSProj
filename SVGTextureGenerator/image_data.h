@@ -13,16 +13,16 @@ class image_data
 private:
     // one tage one cluster, using
     float neighbor_r=3;
-    float desired_width=300;// the desired width of output;
-    float desired_hight=300;// the desired height;
-    float patch_size = 6;
+    float patch_size = 30;
 
-    
-
-    std::unordered_map<int, std::unique_ptr<cluster>> output_cluster;
-    std::unordered_map<int, std::unique_ptr<sample>> output_sample_data;
 
 public:
+    std::unordered_map<int, std::unique_ptr<cluster>> output_cluster;
+    std::unordered_map<int, std::unique_ptr<sample>> output_sample_data;
+    float desired_width = 300;// the desired width of output;
+    float desired_hight = 300;// the desired height;
+    float input_width = 200;
+    float input_hight = 250;
 
     std::unordered_map<int, std::unique_ptr<cluster>> cluster_data;
     std::unordered_map<int, std::unique_ptr<sample>> sample_data;
