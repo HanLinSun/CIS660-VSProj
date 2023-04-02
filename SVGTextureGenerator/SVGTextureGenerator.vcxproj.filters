@@ -28,6 +28,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cluster.cpp">
+    </ClCompile>
     <ClCompile Include="sampleMethod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
