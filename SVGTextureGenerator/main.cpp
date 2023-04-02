@@ -86,7 +86,8 @@ void testFunction()
 	image_data overall_image;
 
 	SVGContext context;
-	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
+	//"D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\image\testPic.svg"
+	string loadFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\testSave.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\pattern.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testPic.svg";
     context.loadSVGFromFile(loadFilePath.c_str(),10);
@@ -164,7 +165,12 @@ void testFunction()
 
 	overall_image.calculate_neighbor(0);
 	overall_image.init_output_image();
-	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
+
+	string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
+
+
+	
+	//string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
 	generateSVGFile(saveFilePath.c_str(), width, height, shapePoints, pathPoints);
 	cout << "Debug helper" << endl;
 
