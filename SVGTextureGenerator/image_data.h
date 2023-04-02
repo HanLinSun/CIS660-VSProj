@@ -17,13 +17,16 @@ private:
     float desired_hight=300;// the desired height;
     float patch_size = 6;
 
-    std::unordered_map<int, std::unique_ptr<cluster>> cluster_data;
-    std::unordered_map<int, std::unique_ptr<sample>> sample_data;
+    
 
     std::unordered_map<int, std::unique_ptr<cluster>> output_cluster;
     std::unordered_map<int, std::unique_ptr<sample>> output_sample_data;
 
 public:
+
+    std::unordered_map<int, std::unique_ptr<cluster>> cluster_data;
+    std::unordered_map<int, std::unique_ptr<sample>> sample_data;
+
     image_data();
     //use this function to import cluster data
     void import_cluster_data();

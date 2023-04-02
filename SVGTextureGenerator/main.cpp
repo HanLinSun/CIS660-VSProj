@@ -84,6 +84,8 @@ vector<vector<glm::vec2>> samplePath(NSVGpath* path)
 
 void testFunction()
 {
+	image_data overall_image;
+
 	SVGContext context;
 	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\pattern.svg";
@@ -107,16 +109,39 @@ void testFunction()
 		while (imgShape && imgShape->next != nullptr)
 		{
 
-			//This svg is about shapes
+			int clusterID = 0;
+			int sample_count = 0;
 			glm::vec2 leftCorner = glm::vec2(imgShape->bounds[0], imgShape->bounds[1]);
 			glm::vec2 rightCorner = glm::vec2(imgShape->bounds[2], imgShape->bounds[3]);
 
 			int width = rightCorner.x - leftCorner.x;
 			int height = rightCorner.y - leftCorner.y;
 
-			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 6, width, height,leftCorner);
+			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height, leftCorner);
+
+			std::unique_ptr<cluster> new_cluster = std::make_unique<cluster>();
+
+			for (auto& m_sample : samplePoints)
+			{
+				std::unique_ptr<sample> new_sample = std::make_unique<sample>();
+				new_sample->cluster_ID = clusterID;
+				new_sample->col = vec3(1, 1, 1);
+				new_sample->position = m_sample;
+
+
+				new_cluster->sample_list.push_back(new_sample->position);
+				new_cluster->set_id(clusterID);
+
+				//adding sample to overall image
+				overall_image.sample_data[sample_count] = std::move(new_sample);
+				sample_count += 1;
+			}
+
 			shapePoints.push_back(samplePoints);
 			imgShape = imgShape->next;
+
+			overall_image.cluster_data[clusterID] = std::move(new_cluster);
+			clusterID += 1;
 		}
 	}
 
@@ -138,10 +163,16 @@ void testFunction()
 	//	}
 	//}
 
+	overall_image.calculate_neighbor(0);
+	overall_image.init_output_image();
 	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
-	generateSVGFile(saveFilePath.c_str(),width,height,shapePoints,pathPoints);
+	generateSVGFile(saveFilePath.c_str(), width, height, shapePoints, pathPoints);
 	cout << "Debug helper" << endl;
+
 }
+
+
+
 
 
 int main()

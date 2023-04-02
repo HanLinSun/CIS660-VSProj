@@ -1,0 +1,4 @@
+class pointUtil
+{
+	void pointsInBezierCurve();
+};

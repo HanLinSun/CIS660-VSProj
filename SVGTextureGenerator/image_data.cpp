@@ -9,7 +9,7 @@ image_data::image_data()
 
 }
 void image_data::calculate_neighbor(int option) {
-    if (option == 1) {
+    if (option == 0) {
         for (auto& [key1, sample] : this->sample_data) {
             for (auto& [key2, target] : this->sample_data) {
                 float phy_distance = glm::distance(sample->position, target->position);
@@ -22,7 +22,7 @@ void image_data::calculate_neighbor(int option) {
     
     
     }
-    else if (option == 0) {
+    else if (option == 1) {
         for (auto& [key1, sample] : this->output_sample_data) {
             for (auto& [key2, target] : this->output_sample_data) {
                 float phy_distance = glm::distance(sample->position, target->position);
