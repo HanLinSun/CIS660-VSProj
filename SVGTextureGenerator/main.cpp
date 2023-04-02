@@ -103,13 +103,40 @@ void testFunction()
 
 	if (imgShape->next != nullptr)
 	{
-		shapePoints = sampleShape(imgShape);
+		while (imgShape && imgShape->next != nullptr)
+		{
+
+			//This svg is about shapes
+			glm::vec2 leftCorner = glm::vec2(imgShape->bounds[0], imgShape->bounds[1]);
+			glm::vec2 rightCorner = glm::vec2(imgShape->bounds[2], imgShape->bounds[3]);
+
+			int width = rightCorner.x - leftCorner.x;
+			int height = rightCorner.y - leftCorner.y;
+
+			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 6, width, height);
+			shapePoints.push_back(samplePoints);
+			imgShape = imgShape->next;
+		}
 	}
 
 	if (imgPath->next != nullptr)
 	{
-		pathPoints = samplePath(imgPath);
+		while (imgPath && imgPath->next != nullptr)
+		{
+
+			//This svg is about shapes
+			glm::vec2 leftCorner = glm::vec2(imgPath->bounds[0], imgPath->bounds[1]);
+			glm::vec2 rightCorner = glm::vec2(imgPath->bounds[2], imgPath->bounds[3]);
+
+			int width = rightCorner.x - leftCorner.x;
+			int height = rightCorner.y - leftCorner.y;
+
+			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height);
+			pathPoints.push_back(samplePoints);
+			imgPath = imgPath->next;
+		}
 	}
+
 	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
 	generateSVGFile(saveFilePath.c_str(),width,height,shapePoints,pathPoints);
 	cout << "Debug helper" << endl;
