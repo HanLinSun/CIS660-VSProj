@@ -47,7 +47,7 @@ bool SampleMethod::isValidPoint(vector<vector<glm::vec2>>& grids, float cellSize
 		
 }
 //this put samples on the whole canvas, so need to check whether this is grid is inside the shape bounds
-vector<glm::vec2> SampleMethod::poissionDiskSampling(float radius, float k, int canvas_width, int canvas_height)
+vector<glm::vec2> SampleMethod::poissionDiskSampling(float radius, float k, int canvas_width, int canvas_height,glm::vec2 canvas_pos)
 {
 	int N = 2; // 2D screen
 	vector<glm::vec2> pointList;
@@ -124,6 +124,8 @@ vector<glm::vec2> SampleMethod::poissionDiskSampling(float radius, float k, int 
 			{
 				continue;
 			}
+			//newPoint += canvas_pos;
+
 			pointList.push_back(newPoint);
 			insertSamplePoint(newPoint,grids,cellSize);
 			activePoints.push_back(newPoint);
@@ -136,6 +138,12 @@ vector<glm::vec2> SampleMethod::poissionDiskSampling(float radius, float k, int 
 			activePoints.erase(activePoints.begin()+randomIndex);
 		}
 	 }
+
+	for (int i = 0; i < pointList.size(); i++)
+	{
+		pointList[i] += canvas_pos;
+	}
+
 	return pointList;
 
 }

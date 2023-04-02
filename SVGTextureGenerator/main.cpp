@@ -53,7 +53,8 @@ vector<vector<glm::vec2>> sampleShape(NSVGshape* shape)
 		int width = rightCorner.x - leftCorner.x;
 		int height = rightCorner.y - leftCorner.y;
 
-		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 6, width, height);
+		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 6, width, height,leftCorner);
+
 		shapeSamplePoints.push_back(samplePoints);
 		shape =shape->next;
 	}
@@ -74,7 +75,7 @@ vector<vector<glm::vec2>> samplePath(NSVGpath* path)
 		int width = rightCorner.x - leftCorner.x;
 		int height = rightCorner.y - leftCorner.y;
 
-		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height);
+		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height,leftCorner);
 		pathSamplePoints.push_back(samplePoints);
 		path = path->next;
 	}
@@ -84,9 +85,9 @@ vector<vector<glm::vec2>> samplePath(NSVGpath* path)
 void testFunction()
 {
 	SVGContext context;
-	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
+	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\pattern.svg";
-	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testPic.svg";
+	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testPic.svg";
     context.loadSVGFromFile(loadFilePath.c_str(),10);
 	NSVGimage* readImg = context.getSVGImage();
 
@@ -113,29 +114,29 @@ void testFunction()
 			int width = rightCorner.x - leftCorner.x;
 			int height = rightCorner.y - leftCorner.y;
 
-			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 6, width, height);
+			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 6, width, height,leftCorner);
 			shapePoints.push_back(samplePoints);
 			imgShape = imgShape->next;
 		}
 	}
 
-	if (imgPath->next != nullptr)
-	{
-		while (imgPath && imgPath->next != nullptr)
-		{
+	//if (imgPath->next != nullptr)
+	//{
+	//	while (imgPath && imgPath->next != nullptr)
+	//	{
 
-			//This svg is about shapes
-			glm::vec2 leftCorner = glm::vec2(imgPath->bounds[0], imgPath->bounds[1]);
-			glm::vec2 rightCorner = glm::vec2(imgPath->bounds[2], imgPath->bounds[3]);
+	//		//This svg is about shapes
+	//		glm::vec2 leftCorner = glm::vec2(imgPath->bounds[0], imgPath->bounds[1]);
+	//		glm::vec2 rightCorner = glm::vec2(imgPath->bounds[2], imgPath->bounds[3]);
 
-			int width = rightCorner.x - leftCorner.x;
-			int height = rightCorner.y - leftCorner.y;
+	//		int width = rightCorner.x - leftCorner.x;
+	//		int height = rightCorner.y - leftCorner.y;
 
-			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height);
-			pathPoints.push_back(samplePoints);
-			imgPath = imgPath->next;
-		}
-	}
+	//		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height);
+	//		pathPoints.push_back(samplePoints);
+	//		imgPath = imgPath->next;
+	//	}
+	//}
 
 	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
 	generateSVGFile(saveFilePath.c_str(),width,height,shapePoints,pathPoints);

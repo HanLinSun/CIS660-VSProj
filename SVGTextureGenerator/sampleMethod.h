@@ -35,7 +35,7 @@ public:
     /// <param name = "canvas xxx"> SVG canvas's size(width and height) </param>
     /// <returns></returns>
     /// 
-   vector<glm::vec2> poissionDiskSampling(float radius, float k, int canvas_width, int canvas_height);
+   vector<glm::vec2> poissionDiskSampling(float radius, float k, int canvas_width, int canvas_height,glm::vec2 canvas_pos);
 
    void insertSamplePoint(glm::vec2 point,  vector<vector<glm::vec2>>& grids,  float cellSize);
 
