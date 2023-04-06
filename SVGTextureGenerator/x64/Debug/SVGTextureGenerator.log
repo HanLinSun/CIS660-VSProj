@@ -1,12 +1,4 @@
-﻿  image_data.cpp
-D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\SVGTextureGenerator\image_data.cpp(52,67): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\SVGTextureGenerator\image_data.cpp(55,39): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\SVGTextureGenerator\image_data.cpp(113,16): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
-D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\SVGTextureGenerator\image_data.cpp(127,60): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\SVGTextureGenerator\image_data.cpp(127,111): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\SVGTextureGenerator\image_data.cpp(128,61): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\SVGTextureGenerator\image_data.cpp(128,114): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  main.cpp
+﻿  main.cpp
 D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\SVGTextureGenerator\main.cpp(53,13): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
@@ -37,5 +29,4 @@ D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\SVGTextureGenerator\main.cpp(118,
           [
               T=float
           ]
-  Generating Code...
   SVGTextureGenerator.vcxproj -> D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\x64\Debug\SVGTextureGenerator.exe

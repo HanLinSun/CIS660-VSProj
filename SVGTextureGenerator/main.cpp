@@ -127,6 +127,7 @@ void testFunction()
 				new_sample->cluster_ID = clusterID;
 				new_sample->col = vec3(1, 1, 1);
 				new_sample->position = m_sample;
+				new_sample->index = sample_count;
 
 
 				new_cluster->sample_list.push_back(new_sample->position);
@@ -165,6 +166,8 @@ void testFunction()
 
 	overall_image.calculate_neighbor(0);
 	overall_image.init_output_image();
+
+	//overall_image.pair_match();
 
 	string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
 	

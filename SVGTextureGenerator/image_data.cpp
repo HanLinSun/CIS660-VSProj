@@ -45,11 +45,13 @@ float image_data::calculate_distance(sample* nSo, sample* nS1) {
         for (auto& [key2, distance2] : nS1->neighborhood) {
 
             sample_distance = abs(distance1 - distance2);
-            std::vector<int> hs1 = histogram_distribution(this->sample_data[key1].get()->position, cluster_data[this->sample_data[key1].get()->cluster_ID].get());
-            std::vector<int> hs2 = histogram_distribution(this->sample_data[key2].get()->position, cluster_data[this->sample_data[key2].get()->cluster_ID].get());
-            w = 0;
+            std::vector<int> hs1 = histogram_distribution(this->output_sample_data[key1].get()->position, output_cluster[this->output_sample_data[key1]->cluster_ID].get());
+            std::vector<int> hs2 = histogram_distribution(this->sample_data[key2].get()->position, cluster_data[this->sample_data[key2]->cluster_ID].get());
+            w = 0.f;
             for (int i = 0; i < 24; i++) {
-                w += pow(hs1[i] - hs2[i], 2.f) / (hs1[i] + hs2[i]);
+                if (hs1[i] + hs2[i] != 0) {
+                    w += pow(hs1[i] - hs2[i], 2.f) / (hs1[i] + hs2[i]);
+                }
             }
 
             sample_distance += 0.5 * w;
@@ -68,10 +70,10 @@ std::vector<int> image_data::histogram_distribution(vec2 input, cluster* m_clust
         vec2 d_v = m_sample - input;
         float distance = glm::distance(m_sample, input);
         int multiplyer = 0;
-        if (distance < 1) {
+        if (distance < 6) {
             multiplyer = 0;
         }
-        else if (distance < 3) {
+        else if (distance < 10) {
             multiplyer = 1;
         }
         else {
@@ -139,7 +141,8 @@ void image_data::init_output_image()
 
                 std::unique_ptr<sample> new_sample = std::make_unique<sample>();
                 new_sample->position = new_pos + distance_from_center;
-                std::cout << "x: " << distance_from_center.x << "y: " << distance_from_center.y << std::endl;
+                new_sample->index = key;
+                //std::cout << "x: " << distance_from_center.x << "y: " << distance_from_center.y << std::endl;
                 new_sample->cluster_ID = m_sample->cluster_ID;
    
                 this->output_sample_data[key] = std::move(new_sample);
@@ -177,5 +180,39 @@ void image_data::init_output_image()
     
     }
     this->calculate_neighbor(1);
+
+}
+
+void image_data::pair_match()
+{
+    float m_distance;
+    int matched_ID = -1;
+    std::cout << "start" << std::endl;
+    for (auto& [key1, output] : this->output_sample_data) {
+
+        float min_distance = 10000.f;
+
+        for (auto& [key2, input] : this->sample_data) {
+            m_distance = this->calculate_distance(output.get(), input.get());
+            if (m_distance < min_distance) {
+                min_distance = m_distance;
+                matched_ID = key2;
+            }
+        }
+        this->sample_pair[key1] = matched_ID;
+    }
+
+    std::cout << "finish" << std::endl;
+    
+}
+// this is the 6.4 part of the paper
+void image_data::optimize_output()
+{
+
+
+
+
+
+
 
 }
