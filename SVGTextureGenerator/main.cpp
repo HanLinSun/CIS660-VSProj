@@ -13,7 +13,7 @@ enum SVGTag
 	Rectangle
 };
 
-void generateSVGFile(const char* path, float width, float height, vector<vector<glm::vec2>>& shapePoints,vector<vector<glm::vec2>>&pathPoints)
+void generateSVGFile(const char* path, float width, float height, vector<vector<glm::vec2>>& shapePoints)
 {
 	std::ofstream file(path);
 	std::string headerStr = "<?xml version=\"1.0\" standalone=\"no\"?> \n";
@@ -29,7 +29,7 @@ void generateSVGFile(const char* path, float width, float height, vector<vector<
 			glm::vec2 samplePoint = shapePoints[i][j];
 			string point_x = "\"" + std::to_string(samplePoint.x) + "\"";
 			string point_y=  "\"" + std::to_string(samplePoint.y) + "\"";
-			headerStr+= "<circle cx="+point_x +" cy=" + point_y + " r=\"0.1\" stroke=\"black\" fill=\"red\" stroke-width=\"0.1\"/> \n";
+			headerStr+= "<circle cx="+point_x +" cy=" + point_y + " r=\"0.1\" stroke=\"black\" fill=\"red\" stroke-width=\"0.2\"/> \n";
 		}
 	}
 	headerStr +="</svg>\n";
@@ -88,8 +88,8 @@ void testFunction()
 
 	SVGContext context;
 	//"D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\image\testPic.svg"
-	string loadFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\testSave.svg";
-	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\pattern.svg";
+	//string loadFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\testSave.svg";
+	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testPic.svg";
     context.loadSVGFromFile(loadFilePath.c_str(),10);
 	NSVGimage* readImg = context.getSVGImage();
@@ -103,21 +103,25 @@ void testFunction()
 	NSVGpath* imgPath = readImg->shapes->paths;
 
 	vector<vector<glm::vec2>> shapePoints;
+
+	vector<vector<glm::vec2>> debugshapePoints;
+
 	vector<vector<glm::vec2>> pathPoints;
 
-	if (imgShape->next != nullptr)
+	int clusterID = 0;
+	int sample_count = 0;
+	for (imgShape; imgShape!=NULL; imgShape=imgShape->next)
 	{
-		int clusterID = 0;
-		int sample_count = 0;
-		while (imgShape && imgShape->next != nullptr)
+		for (imgPath; imgPath != NULL; imgPath = imgPath->next)
 		{
-			glm::vec2 leftCorner = glm::vec2(imgShape->bounds[0], imgShape->bounds[1]);
-			glm::vec2 rightCorner = glm::vec2(imgShape->bounds[2], imgShape->bounds[3]);
+			glm::vec2 leftCorner = glm::vec2(imgPath->bounds[0], imgPath->bounds[1]);
+			glm::vec2 rightCorner = glm::vec2(imgPath->bounds[2], imgPath->bounds[3]);
 
 			int width = rightCorner.x - leftCorner.x;
 			int height = rightCorner.y - leftCorner.y;
 
-			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height, leftCorner);
+			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 4, width, height, leftCorner);
+			debugshapePoints.push_back(samplePoints);
 
 			std::unique_ptr<cluster> new_cluster = std::make_unique<cluster>();
 
@@ -137,47 +141,26 @@ void testFunction()
 				overall_image.sample_data[sample_count] = std::move(new_sample);
 				sample_count += 1;
 			}
-
-			//shapePoints.push_back(samplePoints);
-			imgShape = imgShape->next;
-
 			overall_image.cluster_data[clusterID] = std::move(new_cluster);
 			clusterID += 1;
+
 		}
 	}
-
-	//if (imgPath->next != nullptr)
-	//{
-	//	while (imgPath && imgPath->next != nullptr)
-	//	{
-
-	//		//This svg is about shapes
-	//		glm::vec2 leftCorner = glm::vec2(imgPath->bounds[0], imgPath->bounds[1]);
-	//		glm::vec2 rightCorner = glm::vec2(imgPath->bounds[2], imgPath->bounds[3]);
-
-	//		int width = rightCorner.x - leftCorner.x;
-	//		int height = rightCorner.y - leftCorner.y;
-
-	//		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height);
-	//		pathPoints.push_back(samplePoints);
-	//		imgPath = imgPath->next;
-	//	}
-	//}
 
 	overall_image.calculate_neighbor(0);
 	overall_image.init_output_image();
 
 	//overall_image.pair_match();
-
-	string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
 	
 	for (auto& [key, m_cluster] : overall_image.output_cluster) {
 		shapePoints.push_back(m_cluster->sample_list);
-
 	}
 	
-	//string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
-	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints, pathPoints);
+	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
+	//generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
+
+	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, debugshapePoints);
+
 	cout << "Debug helper" << endl;
 
 }
