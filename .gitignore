@@ -1,5 +1,13 @@
-.vs
-x64
-Debug
-SVGTextureGenerator\x64
-SVGTextureGenerator\x64\Debug
+#ignore all
+*
+
+!.gitignore
+!*.cpp
+!*.h
+!*.sln
+!*.hpp
+!*.inl
+!*.txt
+!*.vcxproj
+!*.filters
+!*.user
