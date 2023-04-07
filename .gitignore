@@ -1,0 +1,13 @@
+#ignore all
+*
+
+!.gitignore
+!*.cpp
+!*.h
+!*.sln
+!*.hpp
+!*.inl
+!*.txt
+!*.vcxproj
+!*.filters
+!*.user
