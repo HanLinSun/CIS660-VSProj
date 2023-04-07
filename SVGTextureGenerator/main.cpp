@@ -87,7 +87,8 @@ void testFunction()
 	image_data overall_image;
 
 	SVGContext context;
-	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
+	//"D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\image\testPic.svg"
+	string loadFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\testSave.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\pattern.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testPic.svg";
     context.loadSVGFromFile(loadFilePath.c_str(),10);
@@ -106,11 +107,10 @@ void testFunction()
 
 	if (imgShape->next != nullptr)
 	{
+		int clusterID = 0;
+		int sample_count = 0;
 		while (imgShape && imgShape->next != nullptr)
 		{
-
-			int clusterID = 0;
-			int sample_count = 0;
 			glm::vec2 leftCorner = glm::vec2(imgShape->bounds[0], imgShape->bounds[1]);
 			glm::vec2 rightCorner = glm::vec2(imgShape->bounds[2], imgShape->bounds[3]);
 
@@ -127,6 +127,7 @@ void testFunction()
 				new_sample->cluster_ID = clusterID;
 				new_sample->col = vec3(1, 1, 1);
 				new_sample->position = m_sample;
+				new_sample->index = sample_count;
 
 
 				new_cluster->sample_list.push_back(new_sample->position);
@@ -137,7 +138,7 @@ void testFunction()
 				sample_count += 1;
 			}
 
-			shapePoints.push_back(samplePoints);
+			//shapePoints.push_back(samplePoints);
 			imgShape = imgShape->next;
 
 			overall_image.cluster_data[clusterID] = std::move(new_cluster);
@@ -165,8 +166,18 @@ void testFunction()
 
 	overall_image.calculate_neighbor(0);
 	overall_image.init_output_image();
-	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
-	generateSVGFile(saveFilePath.c_str(), width, height, shapePoints, pathPoints);
+
+	//overall_image.pair_match();
+
+	string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
+	
+	for (auto& [key, m_cluster] : overall_image.output_cluster) {
+		shapePoints.push_back(m_cluster->sample_list);
+
+	}
+	
+	//string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
+	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints, pathPoints);
 	cout << "Debug helper" << endl;
 
 }
