@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cluster.h" />
+    <ClInclude Include="computeUtil.h" />
     <ClInclude Include="image_data.h" />
     <ClInclude Include="pointUtil.h" />
     <ClInclude Include="sampleMethod.h" />

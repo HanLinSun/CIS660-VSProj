@@ -6,6 +6,13 @@
 #include <glm/vec2.hpp>
 #include <vector>
 //====== Add by Hanlin =====
+
+struct point
+{
+    glm::vec2 position;
+    glm::vec3 color;
+};
+
 using namespace std;
 
 class SampleMethod
@@ -35,7 +42,7 @@ public:
     /// <param name = "canvas xxx"> SVG canvas's size(width and height) </param>
     /// <returns></returns>
     /// 
-   vector<glm::vec2> poissionDiskSampling(float radius, float k, int canvas_width, int canvas_height,glm::vec2 canvas_pos);
+   vector<point> poissionDiskSampling(float radius, float k, int canvas_width, int canvas_height,glm::vec2 canvas_pos,glm::vec3 fillCol, glm::vec3 strokeCol);
 
    void insertSamplePoint(glm::vec2 point,  vector<vector<glm::vec2>>& grids,  float cellSize);
 

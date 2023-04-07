@@ -2,6 +2,7 @@
 #include "image_data.h"
 #include "cluster.h"
 #include "sampleMethod.h"
+#include "computeUtil.h"
 #include <fstream>
 #include <string>
 
@@ -12,6 +13,39 @@ enum SVGTag
 	Cylinder,
 	Rectangle
 };
+
+void generateSVGFile(const char* path, float width, float height, vector<vector<point>>& shapePoints)
+{
+	std::ofstream file(path);
+	std::string headerStr = "<?xml version=\"1.0\" standalone=\"no\"?> \n";
+
+	std::string widthStr = "\"" + std::to_string((int)width) + "pt\"";
+	std::string heightStr = "\"" + std::to_string((int)height) + "pt\"";
+
+	headerStr += "<svg width=" + widthStr + " height= " + heightStr + " version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n";
+	for (int i = 0; i < shapePoints.size(); i++)
+	{
+		for (int j = 0; j < shapePoints[i].size(); j++)
+		{
+			glm::vec2 samplePoint = shapePoints[i][j].position;
+			string point_x = "\"" + std::to_string(samplePoint.x) + "\"";
+			string point_y = "\"" + std::to_string(samplePoint.y) + "\"";
+			glm::vec3 color = shapePoints[i][j].color;
+
+			string r = std::to_string(color.x);
+			string g = std::to_string(color.y);
+			string b = std::to_string(color.z);
+
+			string ColorStr = r + ',' + g + ',' + b;
+			
+			headerStr += "<circle cx=" + point_x + " cy=" + point_y + " r=\"0.1\" stroke=\"rgb("+ ColorStr +")\" fill=\"rgb("+ColorStr+")\" stroke-width=\"0.2\"/> \n";
+		}
+	}
+	headerStr += "</svg>\n";
+	//  cout << "Debug helper" << endl;
+	file << headerStr;
+	file.close();
+}
 
 void generateSVGFile(const char* path, float width, float height, vector<vector<glm::vec2>>& shapePoints)
 {
@@ -38,49 +72,6 @@ void generateSVGFile(const char* path, float width, float height, vector<vector<
 	file.close();
 }
 
-//can put it into sample method class
-vector<vector<glm::vec2>> sampleShape(NSVGshape* shape)
-{
-	SampleMethod* instance = SampleMethod::getInstance();
-	vector<vector<glm::vec2>> shapeSamplePoints;
-	while (shape && shape->next != nullptr)
-	{
-
-		//This svg is about shapes
-		glm::vec2 leftCorner = glm::vec2(shape->bounds[0], shape->bounds[1]);
-		glm::vec2 rightCorner = glm::vec2(shape->bounds[2], shape->bounds[3]);
-
-		int width = rightCorner.x - leftCorner.x;
-		int height = rightCorner.y - leftCorner.y;
-
-		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 6, width, height,leftCorner);
-
-		shapeSamplePoints.push_back(samplePoints);
-		shape =shape->next;
-	}
-	return shapeSamplePoints;
-}
-
-vector<vector<glm::vec2>> samplePath(NSVGpath* path)
-{
-	SampleMethod* instance = SampleMethod::getInstance();
-	vector<vector<glm::vec2>> pathSamplePoints;
-	while (path && path->next != nullptr)
-	{
-
-		//This svg is about shapes
-		glm::vec2 leftCorner = glm::vec2(path->bounds[0], path->bounds[1]);
-		glm::vec2 rightCorner = glm::vec2(path->bounds[2], path->bounds[3]);
-
-		int width = rightCorner.x - leftCorner.x;
-		int height = rightCorner.y - leftCorner.y;
-
-		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 4, width, height,leftCorner);
-		pathSamplePoints.push_back(samplePoints);
-		path = path->next;
-	}
-	return  pathSamplePoints;
-}
 
 void testFunction()
 {
@@ -104,7 +95,7 @@ void testFunction()
 
 	vector<vector<glm::vec2>> shapePoints;
 
-	vector<vector<glm::vec2>> debugshapePoints;
+	vector<vector<point>> debugshapePoints;
 
 	vector<vector<glm::vec2>> pathPoints;
 
@@ -112,7 +103,7 @@ void testFunction()
 	int sample_count = 0;
 	for (imgShape; imgShape!=NULL; imgShape=imgShape->next)
 	{
-		for (imgPath; imgPath != NULL; imgPath = imgPath->next)
+		for (imgPath=imgShape->paths; imgPath != NULL; imgPath = imgPath->next)
 		{
 			glm::vec2 leftCorner = glm::vec2(imgPath->bounds[0], imgPath->bounds[1]);
 			glm::vec2 rightCorner = glm::vec2(imgPath->bounds[2], imgPath->bounds[3]);
@@ -120,7 +111,10 @@ void testFunction()
 			int width = rightCorner.x - leftCorner.x;
 			int height = rightCorner.y - leftCorner.y;
 
-			vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 4, width, height, leftCorner);
+			glm::vec3 fillCol = decodeColor(imgShape->fill.color);
+			glm::vec3 strokeCol = decodeColor(imgShape->stroke.color);
+
+			vector<point> samplePoints = instance->poissionDiskSampling(2, 4, width, height, leftCorner,fillCol,strokeCol);
 			debugshapePoints.push_back(samplePoints);
 
 			std::unique_ptr<cluster> new_cluster = std::make_unique<cluster>();
@@ -130,7 +124,7 @@ void testFunction()
 				std::unique_ptr<sample> new_sample = std::make_unique<sample>();
 				new_sample->cluster_ID = clusterID;
 				new_sample->col = vec3(1, 1, 1);
-				new_sample->position = m_sample;
+				new_sample->position = m_sample.position;
 				new_sample->index = sample_count;
 
 
@@ -159,7 +153,9 @@ void testFunction()
 	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
 	//generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
 
-	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, debugshapePoints);
+	//generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, debugshapePoints);
+
+	generateSVGFile(saveFilePath.c_str(), width,height, debugshapePoints);
 
 	cout << "Debug helper" << endl;
 

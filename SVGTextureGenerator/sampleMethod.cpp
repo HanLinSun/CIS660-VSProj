@@ -47,11 +47,13 @@ bool SampleMethod::isValidPoint(vector<vector<glm::vec2>>& grids, float cellSize
 		
 }
 //this put samples on the whole canvas, so need to check whether this is grid is inside the shape bounds
-vector<glm::vec2> SampleMethod::poissionDiskSampling(float radius, float k, int canvas_width, int canvas_height,glm::vec2 canvas_pos)
+vector<point> SampleMethod::poissionDiskSampling(float radius, float k, int canvas_width, int canvas_height, glm::vec2 canvas_pos, glm::vec3 fillCol, glm::vec3 strokeCol)
 {
 	int N = 2; // 2D screen
 	vector<glm::vec2> pointList;
 	vector<glm::vec2> activePoints;
+
+	vector<point> colorPointList;
 
 	//The sample cell size
 	float cellSize =radius / sqrt(N);
@@ -119,14 +121,20 @@ vector<glm::vec2> SampleMethod::poissionDiskSampling(float radius, float k, int 
 			float p_newy = p.y + new_radius * sin(glm::radians(theta));
 
 			glm::vec2 newPoint = glm::vec2(p_newx, p_newy);
+			glm::vec3 pointColor;
 
 			if (!isValidPoint(grids,cellSize,canvas_width,canvas_height,newPoint,radius))
 			{
 				continue;
 			}
-			//newPoint += canvas_pos;
 
-			pointList.push_back(newPoint);
+			pointColor = (fillCol == glm::vec3(0, 0, 0)) ? strokeCol : fillCol;
+			point res_point;
+			res_point.color = pointColor;
+			res_point.position = newPoint+canvas_pos;
+
+			colorPointList.push_back(res_point);
+			//pointList.push_back(newPoint);
 			insertSamplePoint(newPoint,grids,cellSize);
 			activePoints.push_back(newPoint);
 			found = true;
@@ -139,11 +147,7 @@ vector<glm::vec2> SampleMethod::poissionDiskSampling(float radius, float k, int 
 		}
 	 }
 
-	for (int i = 0; i < pointList.size(); i++)
-	{
-		pointList[i] += canvas_pos;
-	}
 
-	return pointList;
+	return colorPointList;
 
 }
