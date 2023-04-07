@@ -152,6 +152,7 @@
     <ClCompile Include="cluster.cpp" />
     <ClCompile Include="image_data.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pointUtil.cpp" />
     <ClCompile Include="sampleMethod.cpp" />
     <ClCompile Include="SVGContext.cpp" />
     <ClCompile Include="SVGTextureGenerator.cpp" />
@@ -159,6 +160,7 @@
   <ItemGroup>
     <ClInclude Include="cluster.h" />
     <ClInclude Include="image_data.h" />
+    <ClInclude Include="pointUtil.h" />
     <ClInclude Include="sampleMethod.h" />
     <ClInclude Include="SVGContext.h" />
   </ItemGroup>

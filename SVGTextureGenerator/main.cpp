@@ -75,7 +75,7 @@ vector<vector<glm::vec2>> samplePath(NSVGpath* path)
 		int width = rightCorner.x - leftCorner.x;
 		int height = rightCorner.y - leftCorner.y;
 
-		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(5, 4, width, height,leftCorner);
+		vector<glm::vec2> samplePoints = instance->poissionDiskSampling(2, 4, width, height,leftCorner);
 		pathSamplePoints.push_back(samplePoints);
 		path = path->next;
 	}
