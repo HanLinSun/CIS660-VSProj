@@ -12,8 +12,9 @@ class image_data
 {
 private:
     // one tage one cluster, using
-    float neighbor_r=3;
+    float neighbor_r=5;
     float patch_size = 30;
+    float overlap_r = 1;
 
 
 public:
@@ -29,11 +30,19 @@ public:
     std::unordered_map<int, std::unique_ptr<cluster>> output_cluster;
     std::unordered_map<int, std::unique_ptr<sample>> output_sample_data;
 
+    std::unordered_map<int, std::vector<int>> sample_hisgraph;
+    std::unordered_map<int, std::vector<int>> output_hisgraph;
+
+    //std::unordered_map<int, std::unique_ptr<sample>> final_output_sample_data;
+    std::vector<vec2> final_output_sample_data;
+
+
     std::unordered_map<int, int> sample_pair;
 
     image_data();
     //use this function to import cluster data
-    void import_cluster_data();
+    void calculate_hisgraph();//pre calculate the hisgraph
+
 
     //for each sample in sample_data, calculate its neighborhood information
 
