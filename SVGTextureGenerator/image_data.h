@@ -15,13 +15,12 @@ private:
     float neighbor_r=2;
     float patch_size = 30;
     float overlap_r = 1;
-    float patch_number = 100;
-
+    float patch_number = 300;
 
 public:
     
-    float desired_width = 300;// the desired width of output;
-    float desired_hight = 300;// the desired height;
+    float desired_width = 150;// the desired width of output;
+    float desired_hight = 150;// the desired height;
     float input_width = 200;
     float input_hight = 250;
 

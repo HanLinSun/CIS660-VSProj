@@ -26,6 +26,7 @@ struct path_cluster
 {
 	cluster* cluster;
 	NSVGpath* path;
+	pathStyle pathCSS;
 };
 
 
@@ -165,8 +166,8 @@ void testFunction()
 
 	SVGContext context;
 	//"D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\image\testPic.svg"
-	string loadFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\testSave.svg";
-   	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
+	//string loadFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\testSave.svg";
+   	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\complicateTest.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\bell.svg";
     context.loadSVGFromFile(loadFilePath.c_str(),10);
@@ -247,12 +248,19 @@ void testFunction()
 	overall_image.pair_match();
 	overall_image.optimize_output();
 	//test1---------------------------------------------
-	string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
+	//string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
+	////
+	//shapePoints.push_back(overall_image.final_output_sample_data);
+	//generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
+	//----------------------------------------------------------------
+
+	//test Hanlin -------------------------------------------------------
+	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
 	//
 	shapePoints.push_back(overall_image.final_output_sample_data);
 	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
-	//----------------------------------------------------------------
 
+	//------------------------------------------------------------------
 	/*
 	for (auto& [key, m_cluster] : overall_image.output_cluster) {
 		shapePoints.push_back(m_cluster->sample_list);
