@@ -7,6 +7,22 @@
 
 image_data::image_data()
 {
+    
+
+
+}
+void image_data::calculate_hisgraph()
+{
+    for (auto& [key2, sample] : this->sample_data) {
+        std::vector<int> hs2 = histogram_distribution(this->sample_data[key2].get()->position, cluster_data[this->sample_data[key2]->cluster_ID].get());
+        this->sample_hisgraph[key2] = hs2;
+    }
+
+    for (auto& [key1, sample] : this->output_sample_data) {
+        std::vector<int> hs1 = histogram_distribution(this->output_sample_data[key1].get()->position, output_cluster[this->output_sample_data[key1]->cluster_ID].get());
+        this->output_hisgraph[key1] = hs1;
+    }
+
 
 }
 void image_data::calculate_neighbor(int option) {
@@ -37,6 +53,7 @@ void image_data::calculate_neighbor(int option) {
 };
 
 
+
 float image_data::calculate_distance(sample* nSo, sample* nS1) {
     float distance = INFINITY;
     float sample_distance = 0;//
@@ -45,8 +62,10 @@ float image_data::calculate_distance(sample* nSo, sample* nS1) {
         for (auto& [key2, distance2] : nS1->neighborhood) {
 
             sample_distance = abs(distance1 - distance2);
-            std::vector<int> hs1 = histogram_distribution(this->output_sample_data[key1].get()->position, output_cluster[this->output_sample_data[key1]->cluster_ID].get());
-            std::vector<int> hs2 = histogram_distribution(this->sample_data[key2].get()->position, cluster_data[this->sample_data[key2]->cluster_ID].get());
+            //std::vector<int> hs1 = histogram_distribution(this->output_sample_data[key1].get()->position, output_cluster[this->output_sample_data[key1]->cluster_ID].get());
+            //std::vector<int> hs2 = histogram_distribution(this->sample_data[key2].get()->position, cluster_data[this->sample_data[key2]->cluster_ID].get());
+            std::vector<int> hs1 = this->output_hisgraph[key1];
+            std::vector<int> hs2 = this->sample_hisgraph[key2];
             w = 0.f;
             for (int i = 0; i < 24; i++) {
                 if (hs1[i] + hs2[i] != 0) {
@@ -125,9 +144,9 @@ void image_data::init_output_image()
     int counter = 0;
 
     int key = 0;
-    while (counter < 300) {
-        vec2 curr_pos = vec2(m_ramdom(3, this->input_hight - this->neighbor_r), m_ramdom(3, this->input_width - this->neighbor_r));
-        vec2 new_pos = vec2(m_ramdom(3, this->desired_hight - this->neighbor_r), m_ramdom(3, this->desired_width - this->neighbor_r));
+    while (counter < 100) {
+        vec2 curr_pos = vec2(m_ramdom(neighbor_r, this->input_hight - this->neighbor_r), m_ramdom(neighbor_r, this->input_width - this->neighbor_r));
+        vec2 new_pos = vec2(m_ramdom(neighbor_r, this->desired_hight - this->neighbor_r), m_ramdom(neighbor_r, this->desired_width - this->neighbor_r));
 
         float length = this->patch_size / 2;
 
@@ -168,18 +187,21 @@ void image_data::init_output_image()
             new_cluster->sample_list.push_back(m_sample->position);
             new_cluster->set_id(cluster_index);
             this->output_cluster[cluster_index] = std::move(new_cluster);
-            m_sample->cluster_ID = cluster_index;
+            this->output_sample_data[key]->cluster_ID = cluster_index;
+            //m_sample->cluster_ID = cluster_index;
             cluster_index += 1;
         }
         else {
             this->output_cluster[cluster_compare[m_sample->cluster_ID]]->sample_list.push_back(m_sample->position);
-            m_sample->cluster_ID = cluster_index;
+            this->output_sample_data[key]->cluster_ID = cluster_compare[m_sample->cluster_ID];
         }
 
 
     
     }
     this->calculate_neighbor(1);
+
+    calculate_hisgraph();
 
 }
 
@@ -208,7 +230,32 @@ void image_data::pair_match()
 // this is the 6.4 part of the paper
 void image_data::optimize_output()
 {
+    int key = 0;
+    for (auto& [output_key,sample_key] : this->sample_pair) {
 
+        vec2 output_pos = this->output_sample_data[output_key]->position;
+        vec2 sample_pos = this->sample_data[sample_key]->position;
+        vec2 distanceVec;
+        vec2 new_pos;
+        
+        for (auto&[value,distance]: this->sample_data[sample_key]->neighborhood) {
+            distanceVec = this->sample_data[value]->position- sample_pos;
+            new_pos = output_pos + distanceVec;
+            /*
+            std::unique_ptr<sample> new_sample = std::make_unique<sample>();
+            new_sample->position = new_pos;
+            new_sample->index = key;
+            //std::cout << "x: " << distance_from_center.x << "y: " << distance_from_center.y << std::endl;
+            new_sample->cluster_ID = 0;
+
+            this->final_output_sample_data[key] = std::move(new_sample);*/
+            this->final_output_sample_data.push_back(new_pos);
+
+            key += 1;
+
+        }
+
+    }
 
 
 
@@ -216,3 +263,4 @@ void image_data::optimize_output()
 
 
 }
+

@@ -166,12 +166,30 @@ void testFunction()
 	//for (auto& [key, m_cluster] : overall_image.output_cluster) {
 	//	shapePoints.push_back(m_cluster->sample_list);
 	//}
+
+	overall_image.calculate_neighbor(0);
+	overall_image.init_output_image();
+
+	overall_image.pair_match();
+	overall_image.optimize_output();
+
+	string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
+	
+	shapePoints.push_back(overall_image.final_output_sample_data);
+
+	/*
+	for (auto& [key, m_cluster] : overall_image.output_cluster) {
+		shapePoints.push_back(m_cluster->sample_list);
 	//
 	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
 	//generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
 
 	//generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, debugshapePoints);
 
+	}
+	*/
+	//string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
+	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints, pathPoints);
 	generateSVGFile(saveFilePath.c_str(), width,height, debugshapePoints);
 
 	cout << "Debug helper" << endl;
