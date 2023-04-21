@@ -4,6 +4,7 @@
 #include "sampleMethod.h"
 #include "computeUtil.h"
 #include <fstream>
+#include <unordered_map>
 #include <string>
 
 enum SVGTag
@@ -14,11 +15,24 @@ enum SVGTag
 	Rectangle
 };
 
+struct pathStyle
+{
+	float strokeWidth;
+	glm::vec3 fillCol;
+	glm::vec3 strokeCol;
+};
+
 struct path_cluster
 {
 	cluster* cluster;
 	NSVGpath* path;
 };
+
+
+string RGBtoHex(glm::vec3 rgb)
+{
+	return "";
+}
 
 void generateSVGFile(const char* path, float width, float height, vector<vector<point>>& shapePoints)
 {
@@ -78,6 +92,72 @@ void generateSVGFile(const char* path, float width, float height, vector<vector<
 	file.close();
 }
 
+void generateSVGPathFile(const char* path, float width, float height, NSVGpath* drawpath)
+{
+	std::ofstream file(path);
+	std::string headerStr = "<?xml version=\"1.0\" standalone=\"no\"?> \n";
+
+	std::string widthStr = "\"" + std::to_string((int)width) + "pt\"";
+	std::string heightStr = "\"" + std::to_string((int)height) + "pt\"";
+
+	int npts = drawpath->npts;
+	float* pt = drawpath->pts;
+
+	headerStr += "<svg width=" + widthStr + " height= " + heightStr + " version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n";
+	//Need to match path with it's style
+	std::string classStr="<style type = \"text/css\">\n";
+	classStr += ".st0{fill:#EA8D32;stroke:#000000;stroke-miterlimit:10;} \n";
+	classStr += "</style>\n";
+
+	string tempStr = classStr +"<path class=\"st0\" d=\"";
+	//here we only have one shape path, but can pass cluster-shapePath map inside, iterate through 
+	headerStr += tempStr;
+	int i=0;
+	for (; i < npts*2-1; )
+	{
+		if (i == 0)
+		{
+			float p1 = pt[i];
+			float p2 = pt[i + 1];
+			headerStr +="M "+ std::to_string(p1) + "," + std::to_string(p2)+" ";
+			i += 2;
+			continue;
+		}
+		if (i == npts * 2 - 6)
+		{
+			std::string p1 = std::to_string(pt[i]);
+			std::string p2 = std::to_string(pt[i + 1]);
+			std::string p3 = std::to_string(pt[i + 2]);
+			std::string p4 = std::to_string(pt[i + 3]);
+			std::string p5 = std::to_string(pt[i + 4]);
+			std::string p6 = std::to_string(pt[i + 5]);
+			headerStr += "C " + p1 + "," + p2 + "," + p3 + "," + p4 + "," + p5 + "," + p6;
+			if (drawpath->closed)
+			{
+				headerStr += "z\"/> \n";
+			}
+			else headerStr += "\"/> \n";
+			
+			break;
+		}
+		else
+		{
+			//i start from 2
+			std::string p1 = std::to_string(pt[i]);
+			std::string p2 = std::to_string(pt[i + 1]);
+			std::string p3 = std::to_string(pt[i + 2]);
+			std::string p4 = std::to_string(pt[i + 3]);
+			std::string p5 = std::to_string(pt[i + 4]);
+			std::string p6 = std::to_string(pt[i + 5]);
+			headerStr += "C " + p1 + "," + p2 + "," + p3 + "," + p4 + "," + p5 + "," + p6 + " ";
+			i += 6;
+			continue;
+		}
+	}
+	headerStr += "</svg>\n";
+	file << headerStr;
+	file.close();
+}
 
 void testFunction()
 {
@@ -86,8 +166,9 @@ void testFunction()
 	SVGContext context;
 	//"D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\image\testPic.svg"
 	//string loadFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\testSave.svg";
-	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
-	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testPic.svg";
+   	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
+	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\complicateTest.svg";
+	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\bell.svg";
     context.loadSVGFromFile(loadFilePath.c_str(),10);
 	NSVGimage* readImg = context.getSVGImage();
 
@@ -98,6 +179,8 @@ void testFunction()
 	NSVGshape* imgShape = readImg->shapes;
 	
 	NSVGpath* imgPath = readImg->shapes->paths;
+
+	NSVGpath* testPath;
 
 	vector<vector<glm::vec2>> shapePoints;
 
@@ -119,12 +202,6 @@ void testFunction()
 
 			glm::vec3 fillCol = decodeColor(imgShape->fill.color);
 			glm::vec3 strokeCol = decodeColor(imgShape->stroke.color);
-
-			int npts = imgPath->npts;
-			float* pts = imgPath->pts;
-
-	
-		
 
 			float strokeWidth = imgShape->strokeWidth;
 			vector<point> samplePoints = instance->poissionDiskSampling(2, 4, width, height, leftCorner,fillCol,strokeCol,imgPath, strokeWidth);
@@ -158,24 +235,21 @@ void testFunction()
 		}
 	}
 
-	//overall_image.calculate_neighbor(0);
-	//overall_image.init_output_image();
-
-	////overall_image.pair_match();
-	//
+	//overall_image.pair_match();
+	
 	//for (auto& [key, m_cluster] : overall_image.output_cluster) {
 	//	shapePoints.push_back(m_cluster->sample_list);
 	//}
 
-	overall_image.calculate_neighbor(0);
-	overall_image.init_output_image();
+	//overall_image.calculate_neighbor(0);
+	//overall_image.init_output_image();
 
-	overall_image.pair_match();
-	overall_image.optimize_output();
+	//overall_image.pair_match();
+	//overall_image.optimize_output();
 
-	string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
-	
-	shapePoints.push_back(overall_image.final_output_sample_data);
+	//string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
+	//
+	//shapePoints.push_back(overall_image.final_output_sample_data);
 
 	/*
 	for (auto& [key, m_cluster] : overall_image.output_cluster) {
@@ -188,17 +262,16 @@ void testFunction()
 
 	}
 	*/
-	//string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
-	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints, pathPoints);
-	generateSVGFile(saveFilePath.c_str(), width,height, debugshapePoints);
+	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
+//	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints, pathPoints);
+	//generateSVGFile(saveFilePath.c_str(), width,height, debugshapePoints);
+
+	testPath = readImg->shapes->paths;
+	generateSVGPathFile(saveFilePath.c_str(), width, height, testPath);
 
 	cout << "Debug helper" << endl;
 
 }
-
-
-
-
 
 int main()
 {
