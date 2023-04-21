@@ -12,9 +12,10 @@ class image_data
 {
 private:
     // one tage one cluster, using
-    float neighbor_r=5;
+    float neighbor_r=2;
     float patch_size = 30;
     float overlap_r = 1;
+    float patch_number = 100;
 
 
 public:
@@ -32,6 +33,8 @@ public:
 
     std::unordered_map<int, std::vector<int>> sample_hisgraph;
     std::unordered_map<int, std::vector<int>> output_hisgraph;
+
+    std::unordered_map<int, std::vector<int>> cluster_map;
 
     //std::unordered_map<int, std::unique_ptr<sample>> final_output_sample_data;
     std::vector<vec2> final_output_sample_data;

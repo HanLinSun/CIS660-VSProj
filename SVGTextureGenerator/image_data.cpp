@@ -22,8 +22,6 @@ void image_data::calculate_hisgraph()
         std::vector<int> hs1 = histogram_distribution(this->output_sample_data[key1].get()->position, output_cluster[this->output_sample_data[key1]->cluster_ID].get());
         this->output_hisgraph[key1] = hs1;
     }
-
-
 }
 void image_data::calculate_neighbor(int option) {
     if (option == 0) {
@@ -144,7 +142,7 @@ void image_data::init_output_image()
     int counter = 0;
 
     int key = 0;
-    while (counter < 100) {
+    while (counter < this->patch_number) {
         vec2 curr_pos = vec2(m_ramdom(neighbor_r, this->input_hight - this->neighbor_r), m_ramdom(neighbor_r, this->input_width - this->neighbor_r));
         vec2 new_pos = vec2(m_ramdom(neighbor_r, this->desired_hight - this->neighbor_r), m_ramdom(neighbor_r, this->desired_width - this->neighbor_r));
 

@@ -165,8 +165,8 @@ void testFunction()
 
 	SVGContext context;
 	//"D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\image\testPic.svg"
-	//string loadFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\testSave.svg";
-   	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
+	string loadFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\testSave.svg";
+   	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\complicateTest.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\bell.svg";
     context.loadSVGFromFile(loadFilePath.c_str(),10);
@@ -246,10 +246,12 @@ void testFunction()
 
 	overall_image.pair_match();
 	overall_image.optimize_output();
-
-	//string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
+	//test1---------------------------------------------
+	string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
 	//
-	//shapePoints.push_back(overall_image.final_output_sample_data);
+	shapePoints.push_back(overall_image.final_output_sample_data);
+	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
+	//----------------------------------------------------------------
 
 	/*
 	for (auto& [key, m_cluster] : overall_image.output_cluster) {
@@ -262,12 +264,14 @@ void testFunction()
 
 	}
 	*/
-	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
-//	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints, pathPoints);
+	//string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
+
+
+    //generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints, pathPoints);
 	//generateSVGFile(saveFilePath.c_str(), width,height, debugshapePoints);
 
-	testPath = readImg->shapes->paths;
-	generateSVGPathFile(saveFilePath.c_str(), width, height, testPath);
+	//testPath = readImg->shapes->paths;
+	//generateSVGPathFile(saveFilePath.c_str(), width, height, testPath);
 
 	cout << "Debug helper" << endl;
 
@@ -276,5 +280,5 @@ void testFunction()
 int main()
 {
 	testFunction();
-	return 1;
+		return 1;
 }
