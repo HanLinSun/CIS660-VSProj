@@ -14,6 +14,12 @@ enum SVGTag
 	Rectangle
 };
 
+struct path_cluster
+{
+	cluster* cluster;
+	NSVGpath* path;
+};
+
 void generateSVGFile(const char* path, float width, float height, vector<vector<point>>& shapePoints)
 {
 	std::ofstream file(path);
@@ -114,10 +120,19 @@ void testFunction()
 			glm::vec3 fillCol = decodeColor(imgShape->fill.color);
 			glm::vec3 strokeCol = decodeColor(imgShape->stroke.color);
 
-			vector<point> samplePoints = instance->poissionDiskSampling(2, 4, width, height, leftCorner,fillCol,strokeCol);
+			int npts = imgPath->npts;
+			float* pts = imgPath->pts;
+
+	
+		
+
+			float strokeWidth = imgShape->strokeWidth;
+			vector<point> samplePoints = instance->poissionDiskSampling(2, 4, width, height, leftCorner,fillCol,strokeCol,imgPath, strokeWidth);
+
 			debugshapePoints.push_back(samplePoints);
 
 			std::unique_ptr<cluster> new_cluster = std::make_unique<cluster>();
+
 
 			for (auto& m_sample : samplePoints)
 			{
@@ -136,20 +151,22 @@ void testFunction()
 				sample_count += 1;
 			}
 			overall_image.cluster_data[clusterID] = std::move(new_cluster);
+
+
 			clusterID += 1;
 
 		}
 	}
 
-	overall_image.calculate_neighbor(0);
-	overall_image.init_output_image();
+	//overall_image.calculate_neighbor(0);
+	//overall_image.init_output_image();
 
-	//overall_image.pair_match();
-	
-	for (auto& [key, m_cluster] : overall_image.output_cluster) {
-		shapePoints.push_back(m_cluster->sample_list);
-	}
-	
+	////overall_image.pair_match();
+	//
+	//for (auto& [key, m_cluster] : overall_image.output_cluster) {
+	//	shapePoints.push_back(m_cluster->sample_list);
+	//}
+	//
 	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
 	//generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
 

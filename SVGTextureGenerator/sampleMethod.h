@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/vec2.hpp>
+#include <nanoSVG/nanosvg.h>
 #include <vector>
 //====== Add by Hanlin =====
 
@@ -42,10 +43,14 @@ public:
     /// <param name = "canvas xxx"> SVG canvas's size(width and height) </param>
     /// <returns></returns>
     /// 
-   vector<point> poissionDiskSampling(float radius, float k, int canvas_width, int canvas_height,glm::vec2 canvas_pos,glm::vec3 fillCol, glm::vec3 strokeCol);
+   vector<point> poissionDiskSampling(float radius, float k, int canvas_width, int canvas_height,glm::vec2 canvas_pos,glm::vec3 fillCol, glm::vec3 strokeCol,NSVGpath* path, float strokeWidth);
 
    void insertSamplePoint(glm::vec2 point,  vector<vector<glm::vec2>>& grids,  float cellSize);
+   void turnBezierIntoPoly(NSVGpath* path);
 
+   bool pointInsidePoly(glm::vec2 point,float strokeWidth);
+
+   vector<glm::vec2> polygonPoints;
    vector<glm::vec2> hierarchicalSampling();
 
 private:
