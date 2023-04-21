@@ -241,11 +241,11 @@ void testFunction()
 	//	shapePoints.push_back(m_cluster->sample_list);
 	//}
 
-	//overall_image.calculate_neighbor(0);
-	//overall_image.init_output_image();
+	overall_image.calculate_neighbor(0);
+	overall_image.init_output_image();
 
-	//overall_image.pair_match();
-	//overall_image.optimize_output();
+	overall_image.pair_match();
+	overall_image.optimize_output();
 
 	//string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
 	//
