@@ -307,8 +307,26 @@ void testFunction()
 	{
 		int finalClusterID = iter->first;
 		// need the transform from original to final(e.g cluster 4 origin from cluster 1, the transform value and the rotate value)
-		int originalClusterID = iter->second;
-		final_drawPath.push_back(pathVec[originalClusterID]);
+		int originalClusterID = iter->second.first;
+
+		glm::vec2 transform = iter->second.second;
+		drawPath originalPath = pathVec[originalClusterID];
+
+		NSVGpath* pathInstance = originalPath.path;
+		const int npts = pathInstance->npts;
+		float* pt = pathInstance->pts;
+
+		for (int i = 0; i < npts * 2; i+=2)
+		{
+			float x = pt[i];
+			float y = pt[i + 1];
+
+			pt[i] = pt[i] + transform.x;
+			pt[i + 1] = pt[i + 1] + transform.y;
+		}
+		originalPath.path = pathInstance;
+
+		final_drawPath.push_back(originalPath);
 	}
 	//generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
 
@@ -330,7 +348,7 @@ void testFunction()
     //generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints, pathPoints);
 	//generateSVGFile(saveFilePath.c_str(), width,height, debugshapePoints);
 
-	generateSVGPathFile(saveFilePath.c_str(), width, height, final_drawPath);
+	generateSVGPathFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, final_drawPath);
 
 	std::cout << "Debug helper" << endl;
 
