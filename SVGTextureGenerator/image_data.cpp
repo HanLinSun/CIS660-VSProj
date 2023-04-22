@@ -150,6 +150,12 @@ void image_data::init_output_image()
         float length = this->patch_size / 2;
 
         vec2 distance_vect = new_pos - curr_pos;
+
+        //std::cout<< "x: "<<distance_vect.x<<"y: " << distance_vect.y << std::endl;
+
+        if (distance_vect.x == 0 && distance_vect.y == 0) {
+            std::cout << "zero!!!" << std::endl;
+        }
         
         //first step : assign ramdom position to selected pitch  
         for (auto& [key1, m_sample] : this->sample_data) {
@@ -170,11 +176,16 @@ void image_data::init_output_image()
                 //std::cout << "x: " << distance_from_center.x << "y: " << distance_from_center.y << std::endl;
                 new_sample->cluster_ID = counter;
                 
-                if (this->cluster_map.find(m_sample->cluster_ID) == cluster_map.end()) {
-                    cluster_map[counter].first = m_sample->cluster_ID;
-                    cluster_map[counter].second = distance_vect;
+                if (this->cluster_map.find(new_sample->cluster_ID) == cluster_map.end()) {
+                    cluster_map[counter].first = new_sample->cluster_ID;
+                    cluster_map[counter].second = vec2(distance_vect[0],distance_vect[1]);
+                    /*
+                    if (m_sample->cluster_ID == 243) {
 
-                
+                        std::cout << "x: " << distance_vect.x << " y: " << distance_vect.y << std::endl;
+                        //std::cout << "zero get!!!" << std::endl;
+
+                    }*/
                 }
 
                 
