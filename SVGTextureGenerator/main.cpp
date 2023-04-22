@@ -282,24 +282,26 @@ void testFunction()
 
 	//overall_image.pair_match();
 	
-	//for (auto& [key, m_cluster] : overall_image.output_cluster) {
-	//	shapePoints.push_back(m_cluster->sample_list);
-	//}
+
 
 	overall_image.calculate_neighbor(0);
 	overall_image.init_output_image();
 
 	overall_image.pair_match();
 	overall_image.optimize_output();
+
+	for (auto& [key, m_cluster] : overall_image.final_output_sample_data) {
+		shapePoints.push_back(m_cluster);
+	}
 	//test1---------------------------------------------
-	//string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
+	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
 	////
 	//shapePoints.push_back(overall_image.final_output_sample_data);
 	//generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
 	//----------------------------------------------------------------
 
 	//test Hanlin -------------------------------------------------------
-	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
+//	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
 	//
 	//shapePoints.push_back(overall_image.final_output_sample_data);
 	vector<drawPath> final_drawPath;
@@ -312,21 +314,34 @@ void testFunction()
 		glm::vec2 transform = iter->second.second;
 		drawPath originalPath = pathVec[originalClusterID];
 
-		NSVGpath* pathInstance = originalPath.path;
+		drawPath newPath;
+		//deep copy
+		NSVGpath* pathInstance = new NSVGpath();
+		pathInstance->pts=originalPath.path->pts;
+		pathInstance->npts = originalPath.path->npts;
+		pathInstance->closed = originalPath.path->closed;
+		pathInstance->next = originalPath.path->next;
+		//
+		for (int i = 0; i < 4; i++)
+		{
+			pathInstance->bounds[i] = originalPath.path->bounds[i];
+		}
 		const int npts = pathInstance->npts;
 		float* pt = pathInstance->pts;
 
+		
 		for (int i = 0; i < npts * 2; i+=2)
 		{
 			float x = pt[i];
 			float y = pt[i + 1];
 
 			pt[i] = pt[i] + transform.x;
-			pt[i + 1] = pt[i + 1] + transform.y;
-		}
-		originalPath.path = pathInstance;
+			pt[i + 1] = pt[i + 1] - transform.y;
 
-		final_drawPath.push_back(originalPath);
+		}
+		newPath.path = pathInstance;
+		newPath.pathCSS = originalPath.pathCSS;
+		final_drawPath.push_back(newPath);
 	}
 	//generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
 
