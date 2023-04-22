@@ -33,11 +33,11 @@ public:
     std::unordered_map<int, std::vector<int>> sample_hisgraph;
     std::unordered_map<int, std::vector<int>> output_hisgraph;
 
-    std::unordered_map<int, int> cluster_map;
+    std::unordered_map<int, std::pair<int, vec2>> cluster_map;
 
 
     // final cluster map
-    std::unordered_map<int, int> final_cluster_map;// value1: the cluster of output. value2: the origional cluster that cluster[value1] refers to.
+    std::unordered_map<int, std::pair<int,vec2>> final_cluster_map;// value1: the cluster of output. value2: the origional cluster that cluster[value1] refers to.
 
     //std::unordered_map<int, int> cluster_compare;
 

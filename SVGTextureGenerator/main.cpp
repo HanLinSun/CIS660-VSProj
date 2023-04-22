@@ -166,8 +166,8 @@ void testFunction()
 
 	SVGContext context;
 	//"D:\cis660Final\CIS660_REAL_FINAL\CIS660-VSProj\image\testPic.svg"
-	//string loadFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\testSave.svg";
-   	string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
+	string loadFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\testSave.svg";
+   	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\testSave.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\complicateTest.svg";
 	//string loadFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\bell.svg";
     context.loadSVGFromFile(loadFilePath.c_str(),10);

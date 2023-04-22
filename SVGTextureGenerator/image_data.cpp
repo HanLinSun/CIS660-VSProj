@@ -171,7 +171,8 @@ void image_data::init_output_image()
                 new_sample->cluster_ID = counter;
                 
                 if (this->cluster_map.find(m_sample->cluster_ID) == cluster_map.end()) {
-                    cluster_map[counter] = m_sample->cluster_ID;
+                    cluster_map[counter].first = m_sample->cluster_ID;
+                    cluster_map[counter].second = distance_vect;
 
                 
                 }
