@@ -177,15 +177,15 @@ void image_data::init_output_image()
                 new_sample->cluster_ID = counter;
                 
                 if (this->cluster_map.find(new_sample->cluster_ID) == cluster_map.end()) {
-                    cluster_map[counter].first = new_sample->cluster_ID;
+                    cluster_map[counter].first = m_sample->cluster_ID;
                     cluster_map[counter].second = vec2(distance_vect[0],distance_vect[1]);
-                    /*
+
                     if (m_sample->cluster_ID == 243) {
 
                         std::cout << "x: " << distance_vect.x << " y: " << distance_vect.y << std::endl;
                         //std::cout << "zero get!!!" << std::endl;
 
-                    }*/
+                    }
                 }
 
                 
