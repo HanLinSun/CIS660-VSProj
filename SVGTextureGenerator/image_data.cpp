@@ -142,6 +142,7 @@ void image_data::init_output_image()
     int counter = 0;
 
     int key = 0;
+    //int cluster_count = 0;
     while (counter < this->patch_number) {
         vec2 curr_pos = vec2(m_ramdom(neighbor_r, this->input_hight - this->neighbor_r), m_ramdom(neighbor_r, this->input_width - this->neighbor_r));
         vec2 new_pos = vec2(m_ramdom(neighbor_r, this->desired_hight - this->neighbor_r), m_ramdom(neighbor_r, this->desired_width - this->neighbor_r));
@@ -150,9 +151,16 @@ void image_data::init_output_image()
 
         vec2 distance_vect = new_pos - curr_pos;
         
-        //first step : assign ramdom position to selected pitch
+        //first step : assign ramdom position to selected pitch  
         for (auto& [key1, m_sample] : this->sample_data) {
 
+            /*
+            if (m_sample->cluster_ID == 7) {
+
+                vec2 distance_from_center = m_sample->position - curr_pos;
+                std::cout <<"x: " << distance_from_center.x<<"y: " << distance_from_center.y << std::endl;
+            }
+            */
             vec2 distance_from_center = m_sample->position - curr_pos;
             if (-length < distance_from_center.x && distance_from_center.x < length && -length < distance_from_center.y && distance_from_center.y < length) {
 
@@ -160,8 +168,15 @@ void image_data::init_output_image()
                 new_sample->position = new_pos + distance_from_center;
                 new_sample->index = key;
                 //std::cout << "x: " << distance_from_center.x << "y: " << distance_from_center.y << std::endl;
-                new_sample->cluster_ID = m_sample->cluster_ID;
-   
+                new_sample->cluster_ID = counter;
+                
+                if (this->cluster_map.find(m_sample->cluster_ID) == cluster_map.end()) {
+                    cluster_map[counter] = m_sample->cluster_ID;
+
+                
+                }
+
+                
                 this->output_sample_data[key] = std::move(new_sample);
                 key += 1;
             }
@@ -179,6 +194,8 @@ void image_data::init_output_image()
         //std::cout << m_sample->cluster_ID << std::endl;
         if (cluster_compare.find(m_sample->cluster_ID) == cluster_compare.end()) {
             cluster_compare[m_sample->cluster_ID] = cluster_index;
+
+            final_cluster_map[cluster_index] = cluster_map[m_sample->cluster_ID];// 
             
 
             std::unique_ptr<cluster> new_cluster= std::make_unique<cluster>();
@@ -247,7 +264,20 @@ void image_data::optimize_output()
             new_sample->cluster_ID = 0;
 
             this->final_output_sample_data[key] = std::move(new_sample);*/
-            this->final_output_sample_data.push_back(new_pos);
+
+            this->final_output_sample_data[this->output_sample_data[output_key]->cluster_ID].push_back(new_pos);
+            /*
+            
+            if (this->final_output_sample_data.find(this->output_sample_data[output_key]->cluster_ID)!= final_output_sample_data.end()) {
+
+                this->final_output_sample_data[this->output_sample_data[output_key]->cluster_ID].push_back(new_pos);
+
+            }
+            else {
+                this->final_output_sample_data[this->output_sample_data[output_key]->cluster_ID] = std::vector(new_pos);
+            }
+            */
+            //this->final_output_sample_data.push_back(new_pos);
 
             key += 1;
 

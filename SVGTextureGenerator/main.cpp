@@ -249,7 +249,9 @@ void testFunction()
 	//test1---------------------------------------------
 	string saveFilePath = "D:\\cis660Final\\CIS660_REAL_FINAL\\CIS660-VSProj\\image\\Save.svg";
 	//
-	shapePoints.push_back(overall_image.final_output_sample_data);
+	//shapePoints.push_back(overall_image.final_output_sample_data);
+
+
 	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
 	//----------------------------------------------------------------
 

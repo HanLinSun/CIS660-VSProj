@@ -6,7 +6,7 @@
 #include <unordered_map>
 #endif // IMAGE_DATA_H
 #include "cluster.h"
-
+#include <unordered_set>
 
 class image_data
 {
@@ -34,10 +34,16 @@ public:
     std::unordered_map<int, std::vector<int>> sample_hisgraph;
     std::unordered_map<int, std::vector<int>> output_hisgraph;
 
-    std::unordered_map<int, std::vector<int>> cluster_map;
+    std::unordered_map<int, int> cluster_map;
+
+
+    // final cluster map
+    std::unordered_map<int, int> final_cluster_map;// value1: the cluster of output. value2: the origional cluster that cluster[value1] refers to.
+
+    //std::unordered_map<int, int> cluster_compare;
 
     //std::unordered_map<int, std::unique_ptr<sample>> final_output_sample_data;
-    std::vector<vec2> final_output_sample_data;
+    std::unordered_map<int,std::vector<vec2>> final_output_sample_data; // index is the new cluster ID, as a value in 
 
 
     std::unordered_map<int, int> sample_pair;
