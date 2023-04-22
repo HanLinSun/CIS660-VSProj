@@ -18,13 +18,13 @@ enum SVGTag
 struct pathStyle
 {
 	float strokeWidth;
-	glm::vec3 fillCol;
-	glm::vec3 strokeCol;
+	//Hex string
+	std::string fillCol;
+	std::string strokeCol;
 };
 
-struct path_cluster
+struct drawPath
 {
-	cluster* cluster;
 	NSVGpath* path;
 	pathStyle pathCSS;
 };
@@ -189,6 +189,8 @@ void testFunction()
 
 	vector<vector<glm::vec2>> pathPoints;
 
+	vector<drawPath> pathVec;
+
 	int clusterID = 0;
 	int sample_count = 0;
 	for (imgShape; imgShape!=NULL; imgShape=imgShape->next)
@@ -203,6 +205,13 @@ void testFunction()
 
 			glm::vec3 fillCol = decodeColor(imgShape->fill.color);
 			glm::vec3 strokeCol = decodeColor(imgShape->stroke.color);
+			drawPath draw_path;
+
+			draw_path.path = imgPath;
+			draw_path.pathCSS.fillCol = RGBtoHex(fillCol);
+			draw_path.pathCSS.strokeCol = RGBtoHex(strokeCol);
+
+			pathVec.push_back(draw_path);
 
 			float strokeWidth = imgShape->strokeWidth;
 			vector<point> samplePoints = instance->poissionDiskSampling(2, 4, width, height, leftCorner,fillCol,strokeCol,imgPath, strokeWidth);
@@ -219,8 +228,6 @@ void testFunction()
 				new_sample->col = vec3(1, 1, 1);
 				new_sample->position = m_sample.position;
 				new_sample->index = sample_count;
-
-
 				new_cluster->sample_list.push_back(new_sample->position);
 				new_cluster->set_id(clusterID);
 

@@ -21,7 +21,6 @@ void SampleMethod::insertSamplePoint(glm::vec2 point, vector<vector<glm::vec2>>&
 	grids[yIndex][xIndex] = point;
 }
 
-
 float computeCubicBezierCurve(float p0, float p1, float p2, float p3,float& t)
 {
 	float coeff_1 = (float)pow(1 - t, 3);
@@ -45,7 +44,6 @@ void SampleMethod::turnBezierIntoPoly(NSVGpath* path)
 	float* pts = path->pts;
 
 	//why square have 26 value, divide by two have 13 (0 25)
-
 
 	glm::vec2 startPoint;
 	glm::vec2 endPoint;
@@ -140,8 +138,6 @@ bool IsIntersect(glm::vec2 edge_1, glm::vec2 edge_2,glm::vec2 rayOrigin, glm::ve
 	glm::vec2 v4 = rayOrigin - edge_1;
 	glm::vec2 v5 = rayEnd - edge_1;
 	glm::vec2 v6 = edge_2 - edge_1;
-
-	
 
 	float num1 = crossProduct(v1, v3);
 	float num2 = crossProduct(v2, v3);
