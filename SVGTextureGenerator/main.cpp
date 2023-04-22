@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <string>
 
+
 enum SVGTag
 {
 	Polygon,
@@ -21,6 +22,21 @@ struct pathStyle
 	//Hex string
 	std::string fillCol;
 	std::string strokeCol;
+	int styleID;
+};
+
+bool operator ==(const struct pathStyle& path_1, const struct pathStyle path_2)
+{
+	return (path_1.strokeWidth == path_2.strokeWidth) && (path_1.fillCol == path_2.fillCol) && (path_1.strokeCol == path_2.strokeCol)&&(path_1.styleID==path_2.styleID);
+}
+
+struct pathStyle_hash
+{
+	size_t operator()(const struct pathStyle& r) const
+	{
+		std::string temp = r.fillCol + r.strokeCol+to_string(r.styleID);
+		return std::hash<std::string>()(temp);
+	}
 };
 
 struct drawPath
@@ -29,11 +45,6 @@ struct drawPath
 	pathStyle pathCSS;
 };
 
-
-string RGBtoHex(glm::vec3 rgb)
-{
-	return "";
-}
 
 void generateSVGFile(const char* path, float width, float height, vector<vector<point>>& shapePoints)
 {
@@ -93,67 +104,88 @@ void generateSVGFile(const char* path, float width, float height, vector<vector<
 	file.close();
 }
 
-void generateSVGPathFile(const char* path, float width, float height, NSVGpath* drawpath)
+void generateSVGPathFile(const char* path, float width, float height, vector<drawPath>& drawPath_vector)
 {
+
+	std::unordered_set<pathStyle,pathStyle_hash> styleClassSet;
+
 	std::ofstream file(path);
 	std::string headerStr = "<?xml version=\"1.0\" standalone=\"no\"?> \n";
 
 	std::string widthStr = "\"" + std::to_string((int)width) + "pt\"";
 	std::string heightStr = "\"" + std::to_string((int)height) + "pt\"";
 
-	int npts = drawpath->npts;
-	float* pt = drawpath->pts;
-
 	headerStr += "<svg width=" + widthStr + " height= " + heightStr + " version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n";
-	//Need to match path with it's style
-	std::string classStr="<style type = \"text/css\">\n";
-	classStr += ".st0{fill:#EA8D32;stroke:#000000;stroke-miterlimit:10;} \n";
-	classStr += "</style>\n";
 
-	string tempStr = classStr +"<path class=\"st0\" d=\"";
-	//here we only have one shape path, but can pass cluster-shapePath map inside, iterate through 
-	headerStr += tempStr;
-	int i=0;
-	for (; i < npts*2-1; )
+	//generate class style str
+	for (auto iter = drawPath_vector.begin(); iter != drawPath_vector.end(); iter++)
 	{
-		if (i == 0)
+		styleClassSet.insert(iter->pathCSS);
+	}
+
+	std::string classStr = "<style type = \"text/css\">\n";
+	for (auto iter = styleClassSet.begin(); iter != styleClassSet.end(); iter++)
+	{
+		std::string IDstr = to_string(iter->styleID);
+		classStr += ".st" + IDstr + "{fill:" + iter->fillCol + ";" + "stroke:" + iter->strokeCol + ";" + "stroke-miterlimit:" + to_string(iter->strokeWidth) + ";}\n";
+	}
+	classStr += "</style> \n";
+	headerStr += classStr;
+	//generate pathStr
+	
+	for (auto iter = drawPath_vector.begin(); iter != drawPath_vector.end(); iter++)
+	{
+		NSVGpath* path = iter->path;
+		pathStyle style= iter->pathCSS;
+		auto style_iter = styleClassSet.find(style);
+
+		std::string tempStr =  "<path class=\"st" + to_string(iter->pathCSS.styleID) + "\"" + " d = \"";
+		const int npts = path->npts;
+		float* pt = path->pts;
+		int i = 0;
+
+		for (; i < npts * 2 - 1; )
 		{
-			float p1 = pt[i];
-			float p2 = pt[i + 1];
-			headerStr +="M "+ std::to_string(p1) + "," + std::to_string(p2)+" ";
-			i += 2;
-			continue;
-		}
-		if (i == npts * 2 - 6)
-		{
-			std::string p1 = std::to_string(pt[i]);
-			std::string p2 = std::to_string(pt[i + 1]);
-			std::string p3 = std::to_string(pt[i + 2]);
-			std::string p4 = std::to_string(pt[i + 3]);
-			std::string p5 = std::to_string(pt[i + 4]);
-			std::string p6 = std::to_string(pt[i + 5]);
-			headerStr += "C " + p1 + "," + p2 + "," + p3 + "," + p4 + "," + p5 + "," + p6;
-			if (drawpath->closed)
+			if (i == 0)
 			{
-				headerStr += "z\"/> \n";
+				float p1 = pt[i];
+				float p2 = pt[i + 1];
+				tempStr += "M " + std::to_string(p1) + "," + std::to_string(p2) + " ";
+				i += 2;
+				continue;
 			}
-			else headerStr += "\"/> \n";
-			
-			break;
+			if (i == npts * 2 - 6)
+			{
+				std::string p1 = std::to_string(pt[i]);
+				std::string p2 = std::to_string(pt[i + 1]);
+				std::string p3 = std::to_string(pt[i + 2]);
+				std::string p4 = std::to_string(pt[i + 3]);
+				std::string p5 = std::to_string(pt[i + 4]);
+				std::string p6 = std::to_string(pt[i + 5]);
+				tempStr += "C " + p1 + "," + p2 + "," + p3 + "," + p4 + "," + p5 + "," + p6;
+				if (path->closed)
+				{
+					tempStr += "z\"/> \n";
+				}
+				else tempStr += "\"/> \n";
+
+				break;
+			}
+			else
+			{
+				//i start from 2
+				std::string p1 = std::to_string(pt[i]);
+				std::string p2 = std::to_string(pt[i + 1]);
+				std::string p3 = std::to_string(pt[i + 2]);
+				std::string p4 = std::to_string(pt[i + 3]);
+				std::string p5 = std::to_string(pt[i + 4]);
+				std::string p6 = std::to_string(pt[i + 5]);
+				tempStr += "C " + p1 + "," + p2 + "," + p3 + "," + p4 + "," + p5 + "," + p6 + " ";
+				i += 6;
+				continue;
+			}
 		}
-		else
-		{
-			//i start from 2
-			std::string p1 = std::to_string(pt[i]);
-			std::string p2 = std::to_string(pt[i + 1]);
-			std::string p3 = std::to_string(pt[i + 2]);
-			std::string p4 = std::to_string(pt[i + 3]);
-			std::string p5 = std::to_string(pt[i + 4]);
-			std::string p6 = std::to_string(pt[i + 5]);
-			headerStr += "C " + p1 + "," + p2 + "," + p3 + "," + p4 + "," + p5 + "," + p6 + " ";
-			i += 6;
-			continue;
-		}
+		headerStr += tempStr;
 	}
 	headerStr += "</svg>\n";
 	file << headerStr;
@@ -189,12 +221,16 @@ void testFunction()
 
 	vector<vector<glm::vec2>> pathPoints;
 
+	//index is cluster ID
+	//NSVGpath does not have copy constructor so can not use unorder map here
 	vector<drawPath> pathVec;
 
 	int clusterID = 0;
 	int sample_count = 0;
+	int pathStyleID = 0;
 	for (imgShape; imgShape!=NULL; imgShape=imgShape->next)
 	{
+		pathStyleID++;
 		for (imgPath=imgShape->paths; imgPath != NULL; imgPath = imgPath->next)
 		{
 			glm::vec2 leftCorner = glm::vec2(imgPath->bounds[0], imgPath->bounds[1]);
@@ -210,8 +246,8 @@ void testFunction()
 			draw_path.path = imgPath;
 			draw_path.pathCSS.fillCol = RGBtoHex(fillCol);
 			draw_path.pathCSS.strokeCol = RGBtoHex(strokeCol);
-
-			pathVec.push_back(draw_path);
+			draw_path.pathCSS.strokeWidth = imgShape->strokeWidth;
+			draw_path.pathCSS.styleID = pathStyleID;
 
 			float strokeWidth = imgShape->strokeWidth;
 			vector<point> samplePoints = instance->poissionDiskSampling(2, 4, width, height, leftCorner,fillCol,strokeCol,imgPath, strokeWidth);
@@ -219,7 +255,6 @@ void testFunction()
 			debugshapePoints.push_back(samplePoints);
 
 			std::unique_ptr<cluster> new_cluster = std::make_unique<cluster>();
-
 
 			for (auto& m_sample : samplePoints)
 			{
@@ -235,9 +270,11 @@ void testFunction()
 				overall_image.sample_data[sample_count] = std::move(new_sample);
 				sample_count += 1;
 			}
+
+			//index is ClusterID so form a map
+			pathVec.push_back(draw_path);
+
 			overall_image.cluster_data[clusterID] = std::move(new_cluster);
-
-
 			clusterID += 1;
 
 		}
@@ -265,9 +302,15 @@ void testFunction()
 	string saveFilePath = "D:\\CIS660\\CIS660-VSProj\\image\\Save.svg";
 	//
 	//shapePoints.push_back(overall_image.final_output_sample_data);
-
-
-	generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
+	vector<drawPath> final_drawPath;
+	for (auto iter = overall_image.final_cluster_map.begin(); iter != overall_image.final_cluster_map.end(); iter++)
+	{
+		int finalClusterID = iter->first;
+		// need the transform from original to final(e.g cluster 4 origin from cluster 1, the transform value and the rotate value)
+		int originalClusterID = iter->second;
+		final_drawPath.push_back(pathVec[originalClusterID]);
+	}
+	//generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints);
 
 	//------------------------------------------------------------------
 	/*
@@ -287,10 +330,9 @@ void testFunction()
     //generateSVGFile(saveFilePath.c_str(), overall_image.desired_width, overall_image.desired_hight, shapePoints, pathPoints);
 	//generateSVGFile(saveFilePath.c_str(), width,height, debugshapePoints);
 
-	//testPath = readImg->shapes->paths;
-	//generateSVGPathFile(saveFilePath.c_str(), width, height, testPath);
+	generateSVGPathFile(saveFilePath.c_str(), width, height, final_drawPath);
 
-	cout << "Debug helper" << endl;
+	std::cout << "Debug helper" << endl;
 
 }
 

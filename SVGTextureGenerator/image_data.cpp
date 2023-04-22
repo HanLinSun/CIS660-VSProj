@@ -172,8 +172,7 @@ void image_data::init_output_image()
                 
                 if (this->cluster_map.find(m_sample->cluster_ID) == cluster_map.end()) {
                     cluster_map[counter] = m_sample->cluster_ID;
-
-                
+                                   
                 }
 
                 
