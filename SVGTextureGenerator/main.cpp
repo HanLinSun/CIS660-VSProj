@@ -317,7 +317,15 @@ void testFunction()
 		drawPath newPath;
 		//deep copy
 		NSVGpath* pathInstance = new NSVGpath();
-		pathInstance->pts=originalPath.path->pts;
+		const int ptLen = originalPath.path->npts * 2;
+
+		float* new_pt = new float[ptLen];
+
+		for (int i = 0; i < originalPath.path->npts * 2; i++)
+		{
+			new_pt[i] = originalPath.path->pts[i];
+		}
+		pathInstance->pts=new_pt;
 		pathInstance->npts = originalPath.path->npts;
 		pathInstance->closed = originalPath.path->closed;
 		pathInstance->next = originalPath.path->next;
