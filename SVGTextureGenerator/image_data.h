@@ -65,6 +65,11 @@ public:
     void optimize_output(); // overlap the previous output with closest sample's neighbor;
 
 
+    void setPathNum(float in_patchNumber);
+    void setOverlap(float in_overlap);
+    void setPatchSize(float in_pathSize);
+    void setNeighbour(float in_neighbour);
+
 
 
 

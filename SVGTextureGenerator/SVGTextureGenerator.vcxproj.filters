@@ -24,15 +24,27 @@
     <ClCompile Include="image_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cluster.cpp">
     </ClCompile>
     <ClCompile Include="sampleMethod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pointUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureGen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PluginMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureCMD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -49,10 +61,16 @@
     <ClInclude Include="sampleMethod.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pointUtil.h">
+    <ClInclude Include="computeUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="computeUtil.h">
+    <ClInclude Include="TextureGen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureCMD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

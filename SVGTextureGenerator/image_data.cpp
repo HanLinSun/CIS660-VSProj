@@ -11,6 +11,25 @@ image_data::image_data()
 
 
 }
+
+
+void image_data::setPathNum(float in_patchNumber)
+{
+    patch_number = in_patchNumber;
+}
+void image_data::setOverlap(float in_overlap)
+{
+    overlap_r = in_overlap;
+}
+void image_data::setPatchSize(float in_pathSize)
+{
+    patch_size = in_pathSize;
+}
+void image_data::setNeighbour(float in_neighbour)
+{
+    neighbor_r = in_neighbour;
+}
+
 void image_data::calculate_hisgraph()
 {
     for (auto& [key2, sample] : this->sample_data) {
